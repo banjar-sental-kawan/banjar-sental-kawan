@@ -32,6 +32,12 @@ const TYPE_LABEL: Record<string, string> = {
   rapat:   'Rapat',
 }
 
+/* ── Supabase finance row shape ── */
+interface FinanceRow {
+  type:   string
+  amount: number
+}
+
 /* ── component ── */
 export default function HomePage() {
   const [stats, setStats] = useState({
@@ -58,8 +64,11 @@ export default function HomePage() {
         supabase.from('announcements').select('*', { count: 'exact', head: true }),
       ])
 
-      const balance = (finances ?? []).reduce(
-        (sum, f) => sum + (f.type === 'pemasukan' ? f.amount : -f.amount), 0,
+      /* ── Explicitly typed reduce — fixes ts(7006) implicit any errors ── */
+      const balance = (finances as FinanceRow[] ?? []).reduce(
+        (sum: number, f: FinanceRow) =>
+          sum + (f.type === 'pemasukan' ? f.amount : -f.amount),
+        0,
       )
 
       setStats({
@@ -68,7 +77,7 @@ export default function HomePage() {
         balance,
         announcements: announcementCount ?? 0,
       })
-      setUpcoming(upcomingEvents ?? [])
+      setUpcoming((upcomingEvents as BanjarEvent[]) ?? [])
       setLoading(false)
     })()
   }, [])
