@@ -37,11 +37,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.variable} ${notoBalinese.variable} ${cormorant.variable} antialiased`}>
         <AdminProvider>
 
-          {/* ── Ambient background blobs ── */}
-          <div className="fixed inset-0 -z-10 bg-slate-50" aria-hidden="true">
-            <div className="absolute top-0     left-0   w-120 h-120 rounded-full bg-amber-50  opacity-90 blur-3xl" />
-            <div className="absolute bottom-0  right-0  w-110 h-110 rounded-full bg-indigo-50 opacity-80 blur-3xl" />
-            <div className="absolute top-1/2   left-1/2 w-85 h-85 rounded-full bg-emerald-50 opacity-60 blur-3xl -translate-x-1/2 -translate-y-1/2" />
+          {/* ── Rich ambient background ── */}
+          <div className="fixed inset-0 -z-10" aria-hidden="true"
+            style={{ background: "linear-gradient(135deg, #fdf6e3 0%, #fef9f0 30%, #f0f4ff 65%, #f5f0ff 100%)" }}>
+            {/* Top-left warm amber glow */}
+            <div className="absolute -top-20 -left-20 w-150 h-150 rounded-full opacity-60"
+              style={{ background: "radial-gradient(circle, #fde68a 0%, #fbbf24 30%, transparent 70%)", filter: "blur(60px)" }} />
+            {/* Bottom-right cool indigo glow */}
+            <div className="absolute -bottom-20 -right-20 w-140 h-140nded-full opacity-40"
+              style={{ background: "radial-gradient(circle, #c7d2fe 0%, #818cf8 30%, transparent 70%)", filter: "blur(60px)" }} />
+            {/* Center emerald accent */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-100 h-100 rounded-full opacity-25"
+              style={{ background: "radial-gradient(circle, #6ee7b7 0%, #10b981 40%, transparent 70%)", filter: "blur(70px)" }} />
+            {/* Top-right terracotta */}
+            <div className="absolute top-10 right-10 w-[320px] h-80 rounded-full opacity-30"
+              style={{ background: "radial-gradient(circle, #fca5a5 0%, #f87171 40%, transparent 70%)", filter: "blur(55px)" }} />
           </div>
 
           {/* ── Sticky header ── */}
