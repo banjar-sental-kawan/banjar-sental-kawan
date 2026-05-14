@@ -15,7 +15,7 @@ const AdminContext = createContext<AdminContextType>({
 })
 
 // ⚠️  Change this password before going live!
-const ADMIN_PASSWORD = 'sental2024'
+const ADMIN_PASSWORD = 'SentalKawan2026'
 
 export function AdminProvider({ children }: { children: ReactNode }) {
   const [isAdmin, setIsAdmin] = useState(false)
