@@ -1,20 +1,108 @@
 @import "tailwindcss";
+
+/* ─── Custom font variables from next/font ─────────────────────── */
 @theme {
-  --font-balinese: var(--font-balinese);
-}
-@layer utilities {
-  .glass-panel {
-    background-color: rgb(255 255 255 / 0.1);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgb(255 255 255 / 0.2);
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    border-radius: 1rem;
-  }
+  --font-inter:     var(--font-inter);
+  --font-balinese:  var(--font-balinese);
+  --font-cormorant: var(--font-cormorant);
 }
 
-/* Optional: A subtle background to make the glass effect pop */
+/* ─── Glassmorphism card ───────────────────────────────────────── */
+.glass-card {
+  background:          rgba(255, 255, 255, 0.65);
+  backdrop-filter:     blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border:              1px solid rgba(15, 23, 42, 0.09);
+  border-radius:       1rem;
+  box-shadow:          0 4px 20px rgba(15, 23, 42, 0.07),
+                       0 1px 4px  rgba(15, 23, 42, 0.04);
+  transition:          background 0.2s ease, box-shadow 0.2s ease;
+}
+.glass-card:hover {
+  background:   rgba(255, 255, 255, 0.85);
+  box-shadow:   0 8px 32px rgba(15, 23, 42, 0.10);
+}
+
+/* ─── Header glass ─────────────────────────────────────────────── */
+.glass-header {
+  background:          rgba(255, 255, 255, 0.88);
+  backdrop-filter:     blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom:       1px solid rgba(15, 23, 42, 0.08);
+}
+
+/* ─── Font helpers ─────────────────────────────────────────────── */
+.font-balinese  { font-family: var(--font-balinese),  serif; }
+.font-inter     { font-family: var(--font-inter),     sans-serif; }
+.font-garamond  { font-family: var(--font-cormorant), serif; }
+
+/* ─── Animations ───────────────────────────────────────────────── */
+.fade-up {
+  animation: fadeUp 0.4s ease forwards;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.float {
+  animation: floatY 7s ease-in-out infinite;
+}
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-9px); }
+}
+
+/* ─── Badge colour variants ────────────────────────────────────── */
+.badge-upacara {
+  background: #fff7ed;
+  color:      #c2410c;
+  border:     1px solid #fed7aa;
+}
+.badge-ngaben {
+  background: #f5f3ff;
+  color:      #6d28d9;
+  border:     1px solid #ddd6fe;
+}
+.badge-seni {
+  background: #ecfdf5;
+  color:      #065f46;
+  border:     1px solid #a7f3d0;
+}
+.badge-rapat {
+  background: #eff6ff;
+  color:      #1d4ed8;
+  border:     1px solid #bfdbfe;
+}
+.badge-penting {
+  background: #fffbeb;
+  color:      #b45309;
+  border:     1px solid #fde68a;
+}
+
+/* ─── Table row hover ──────────────────────────────────────────── */
+tr.row-hover:hover td {
+  background: rgba(15, 23, 42, 0.025);
+}
+
+/* ─── Scrollbar ────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: rgba(15,23,42,0.15); border-radius: 3px; }
+
+/* ─── Focus ring ───────────────────────────────────────────────── */
+input:focus,
+select:focus,
+textarea:focus {
+  outline:    none;
+  border-color: #d97706 !important;
+  box-shadow:   0 0 0 3px rgba(217,119,6,0.12);
+}
+
+/* ─── Base ─────────────────────────────────────────────────────── */
 body {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  color: white;
-  min-height: 100vh;
+  font-family: var(--font-cormorant), Georgia, serif;
+  background:  #f8fafc;
+  color:       #1e293b;
+  min-height:  100vh;
 }
