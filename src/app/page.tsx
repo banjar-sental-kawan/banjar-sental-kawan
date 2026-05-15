@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import {
   CalendarDots, Megaphone, CurrencyCircleDollar, UsersThree,
@@ -10,7 +9,6 @@ import { supabase } from '@/lib/supabase'
 import type { BanjarEvent } from '@/lib/types'
 import KalenderBali from '@/components/KalenderBali'
 
-/* ── helpers ── */
 const fmt = (n: number) =>
   new Intl.NumberFormat('id-ID', {
     style: 'currency', currency: 'IDR', maximumFractionDigits: 0,
@@ -22,16 +20,11 @@ const fmtDate = (d: string) =>
   })
 
 const TYPE_COLOR: Record<string, string> = {
-  upacara: 'badge-upacara',
-  ngaben:  'badge-ngaben',
-  seni:    'badge-seni',
-  rapat:   'badge-rapat',
+  upacara: 'badge-upacara', ngaben: 'badge-ngaben',
+  seni: 'badge-seni',       rapat:  'badge-rapat',
 }
 const TYPE_LABEL: Record<string, string> = {
-  upacara: 'Upacara',
-  ngaben:  'Ngaben',
-  seni:    'Kesenian',
-  rapat:   'Rapat',
+  upacara: 'Upacara', ngaben: 'Ngaben', seni: 'Kesenian', rapat: 'Rapat',
 }
 
 interface FinanceRow { type: string; amount: number }
@@ -44,41 +37,83 @@ export default function HomePage() {
   const [loading,  setLoading]  = useState(true)
 
   useEffect(() => {
+    /* ── Wrap everything in try/catch/finally so loading ALWAYS ends ── */
     ;(async () => {
-      const today = new Date().toISOString().split('T')[0]
-      const [
-        { count: memberCount },
-        { data: upcomingEvents },
-        { count: eventCount },
-        { data: finances },
-        { count: announcementCount },
-      ] = await Promise.all([
-        supabase.from('members').select('*', { count: 'exact', head: true }),
-        supabase.from('events').select('*').gte('date', today).order('date').limit(3),
-        supabase.from('events').select('*', { count: 'exact', head: true }).gte('date', today),
-        supabase.from('finance').select('type, amount'),
-        supabase.from('announcements').select('*', { count: 'exact', head: true }),
-      ])
+      try {
+        const today = new Date().toISOString().split('T')[0]
 
-      const balance = (finances as FinanceRow[] ?? []).reduce(
-        (sum: number, f: FinanceRow) =>
-          sum + (f.type === 'pemasukan' ? f.amount : -f.amount), 0,
-      )
+        const [
+          { count: memberCount },
+          { data: upcomingEvents },
+          { count: eventCount },
+          { data: finances },
+          { count: announcementCount },
+        ] = await Promise.all([
+          supabase.from('members').select('*', { count: 'exact', head: true }),
+          supabase.from('events').select('*').gte('date', today).order('date').limit(3),
+          supabase.from('events').select('*', { count: 'exact', head: true }).gte('date', today),
+          supabase.from('finance').select('type, amount'),
+          supabase.from('announcements').select('*', { count: 'exact', head: true }),
+        ])
 
-      setStats({
-        members: memberCount ?? 0, events: eventCount ?? 0,
-        balance, announcements: announcementCount ?? 0,
-      })
-      setUpcoming((upcomingEvents as BanjarEvent[]) ?? [])
-      setLoading(false)
+        const balance = (finances as FinanceRow[] ?? []).reduce(
+          (sum: number, f: FinanceRow) =>
+            sum + (f.type === 'pemasukan' ? f.amount : -f.amount),
+          0,
+        )
+
+        setStats({
+          members:       memberCount       ?? 0,
+          events:        eventCount        ?? 0,
+          balance,
+          announcements: announcementCount ?? 0,
+        })
+        setUpcoming((upcomingEvents as BanjarEvent[]) ?? [])
+      } catch (err) {
+        console.error('Homepage data fetch error:', err)
+        /* Stats stay at 0 — page still renders correctly */
+      } finally {
+        /* This ALWAYS runs, even if Promise.all throws */
+        setLoading(false)
+      }
     })()
   }, [])
 
   const STAT_CARDS = [
-    { icon: UsersThree,          label: 'Total Krama',        value: stats.members,       unit: 'orang', bali: 'ᬓ᭄ᬭᬫ',        color: 'text-amber-600 bg-amber-50'   },
-    { icon: CalendarDots,        label: 'Kegiatan Mendatang', value: stats.events,        unit: 'agenda',bali: 'ᬓᬕᬶᬬᬢᬦ᭄',      color: 'text-blue-600 bg-blue-50'     },
-    { icon: CurrencyCircleDollar,label: 'Saldo Kas',          value: fmt(stats.balance),  unit: '',      bali: 'ᬲᬮ᭄ᬤᭀ',        color: stats.balance >= 0 ? 'text-emerald-600 bg-emerald-50' : 'text-red-500 bg-red-50' },
-    { icon: Megaphone,           label: 'Pengumuman',         value: stats.announcements, unit: 'info',  bali: 'ᬧᬗᬸᬫᬸᬫᬦ᭄',    color: 'text-violet-600 bg-violet-50' },
+    {
+      icon:  UsersThree,
+      label: 'Total Krama',
+      value: stats.members,
+      unit:  'orang',
+      bali:  'ᬓ᭄ᬭᬫ',
+      color: 'text-amber-600 bg-amber-50',
+    },
+    {
+      icon:  CalendarDots,
+      label: 'Kegiatan Mendatang',
+      value: stats.events,
+      unit:  'agenda',
+      bali:  'ᬓᬕᬶᬬᬢᬦ᭄',
+      color: 'text-blue-600 bg-blue-50',
+    },
+    {
+      icon:  CurrencyCircleDollar,
+      label: 'Saldo Kas',
+      value: fmt(stats.balance),
+      unit:  '',
+      bali:  'ᬲᬮ᭄ᬤᭀ',
+      color: stats.balance >= 0
+        ? 'text-emerald-600 bg-emerald-50'
+        : 'text-red-500 bg-red-50',
+    },
+    {
+      icon:  Megaphone,
+      label: 'Pengumuman',
+      value: stats.announcements,
+      unit:  'info',
+      bali:  'ᬧᬗᬸᬫᬸᬫᬦ᭄',
+      color: 'text-violet-600 bg-violet-50',
+    },
   ]
 
   if (loading) return (
@@ -94,15 +129,16 @@ export default function HomePage() {
       <div className="glass-card p-8 sm:p-12 text-center relative overflow-hidden">
         <div className="absolute -top-10 -right-10 w-48 h-48 bg-green-50 rounded-full blur-2xl opacity-60" />
 
-        {/* Logo */}
+        {/* Logo — only renders if file exists in /public */}
         <div className="flex justify-center mb-6">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src="/logo.png"
             alt="Logo Banjar Adat Sental Kawan"
             width={110}
             height={110}
             className="object-contain drop-shadow-md"
-            priority
+            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
           />
         </div>
 
@@ -129,8 +165,12 @@ export default function HomePage() {
             <div className={`inline-flex items-center justify-center w-10 h-10 rounded-xl mb-3 ${s.color}`}>
               <s.icon size={20} weight="fill" />
             </div>
-            <div className="font-balinese text-amber-600 text-xs mb-1" style={{ opacity: 0.75 }}>{s.bali}</div>
-            <div className="font-inter font-bold text-slate-800 text-xl mb-0.5 break-all">{s.value}</div>
+            <div className="font-balinese text-amber-600 text-xs mb-1" style={{ opacity: 0.75 }}>
+              {s.bali}
+            </div>
+            <div className="font-inter font-bold text-slate-800 text-xl mb-0.5 break-all">
+              {s.value}
+            </div>
             <div className="font-garamond text-slate-600 text-sm">
               {s.label}{s.unit ? ` (${s.unit})` : ''}
             </div>
@@ -142,8 +182,13 @@ export default function HomePage() {
       {upcoming.length > 0 && (
         <div>
           <div className="flex justify-between items-center mb-4">
-            <h2 className="font-inter font-bold text-slate-800 text-lg">Kegiatan Mendatang</h2>
-            <Link href="/events" className="font-inter text-sm font-semibold text-amber-600 hover:text-amber-700 transition-colors">
+            <h2 className="font-inter font-bold text-slate-800 text-lg">
+              Kegiatan Mendatang
+            </h2>
+            <Link
+              href="/events"
+              className="font-inter text-sm font-semibold text-amber-600 hover:text-amber-700 transition-colors"
+            >
               Lihat Semua →
             </Link>
           </div>
@@ -154,13 +199,21 @@ export default function HomePage() {
                   <span className={`text-xs font-inter font-semibold px-2.5 py-1 rounded-full ${TYPE_COLOR[e.type] ?? 'badge-rapat'}`}>
                     {TYPE_LABEL[e.type] ?? e.type}
                   </span>
-                  <span className="font-garamond text-slate-400 text-sm">{fmtDate(e.date)}</span>
+                  <span className="font-garamond text-slate-400 text-sm">
+                    {fmtDate(e.date)}
+                  </span>
                 </div>
                 {e.balinese && (
-                  <div className="font-balinese text-amber-600 text-xs mb-1" style={{ opacity: 0.8 }}>{e.balinese}</div>
+                  <div className="font-balinese text-amber-600 text-xs mb-1" style={{ opacity: 0.8 }}>
+                    {e.balinese}
+                  </div>
                 )}
-                <h3 className="font-inter font-semibold text-slate-800 text-sm mb-2 leading-snug">{e.title}</h3>
-                <p className="font-garamond text-slate-600 text-sm leading-relaxed line-clamp-2">{e.description}</p>
+                <h3 className="font-inter font-semibold text-slate-800 text-sm mb-2 leading-snug">
+                  {e.title}
+                </h3>
+                <p className="font-garamond text-slate-600 text-sm leading-relaxed line-clamp-2">
+                  {e.description}
+                </p>
                 <p className="font-garamond text-slate-500 text-xs mt-2">📍 {e.location}</p>
               </div>
             ))}
@@ -168,7 +221,7 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* ── Divider ── */}
+      {/* ── Green divider ── */}
       <div className="h-px bg-linear-to-r from-transparent via-green-300 to-transparent" />
 
       {/* ── Kalender Bali ── */}
