@@ -182,9 +182,7 @@ export default function HomePage() {
             ᬩᬜ᭄ᬚᬃ ᬆᬤᬢ᭄ ᬲᭂᬦ᭄ᬢᬮ᭄ ᬓᬯᬦ᭄
           </div>
           <p className="font-garamond text-slate-600 text-lg max-w-xl mx-auto leading-relaxed">
-            Organisasi adat di dalam naungan Desa Adat Ped yang berperan menjaga
-            keharmonisan, melaksanakan upacara adat Hindu, dan memberikan dukungan
-            kepada seluruh krama Banjar Adat Sental Kawan.
+            Kesatuan masyarakat hukum adat Bali yang bersifat tradisional dan sosio-religius di bawah naungan Desa Adat Ped, yang fungsi utamanya adalah mengatur dan mengurus urusan adat istiadat, hukum adat (awig-awig), serta pelaksanaan upacara keagamaan (Panca Yadnya) bagi para anggota atau krama banjar Sental Kawan.
           </p>
           <p className="font-garamond text-slate-400 text-sm mt-4">
             Desa Adat Ped · Kecamatan Nusa Penida · Kabupaten Klungkung · Provinsi Bali
