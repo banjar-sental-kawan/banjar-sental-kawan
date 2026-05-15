@@ -179,7 +179,7 @@ export default function HomePage() {
             Banjar Adat Sental Kawan
           </h1>
           <div className="font-balinese text-amber-500 text-sm mb-5" style={{ opacity: 0.85 }}>
-            ᬩᬜ᭄ᬚᬃ ᬆᬤᬢ᭄ ᬲᭂᬦ᭄ᬢᬮ᭄ ᬓᬯᬦ᭄
+            ᬩᬜ᭄ᬚᬃᬆᬤᬢ᭄ᬲᭂᬦ᭄ᬢᬮ᭄ᬓᬯᬦ᭄​᭟​&nbsp;
           </div>
           <p className="font-garamond text-slate-600 text-lg max-w-xl mx-auto leading-relaxed">
             Kesatuan masyarakat hukum adat Bali yang bersifat tradisional dan sosio-religius di bawah naungan Desa Adat Ped, yang fungsi utamanya adalah mengatur dan mengurus urusan adat istiadat, hukum adat (awig-awig), serta pelaksanaan upacara keagamaan (Panca Yadnya) bagi para anggota atau krama banjar Sental Kawan.
@@ -187,6 +187,9 @@ export default function HomePage() {
           <p className="font-garamond text-slate-400 text-sm mt-4">
             Desa Adat Ped · Kecamatan Nusa Penida · Kabupaten Klungkung · Provinsi Bali
           </p>
+          <div className="font-balinese text-amber-500 text-sm mb-5" style={{ opacity: 0.85 }}>
+            ᬤᬾᬰ​&nbsp;ᬆᬤᬢ᭄​᭞​&nbsp;ᬧᬾᬤ᭄​᭞​&nbsp;​&nbsp;ᬓᭂᬘᬫᬢᬦ᭄​&nbsp;ᬦᬸᬱ​&nbsp;ᬧᭂᬦᬶᬤ​᭞​&nbsp;​&nbsp;ᬓᬪᬸᬧᬢᬾᬦ᭄​&nbsp;ᬓ᭄ᬮᬸᬗ᭄ᬓᬸᬂ​᭞​&nbsp;​&nbsp;ᬧ᭄ᬭᭀᬧᬶᬦ᭄ᬲᬶ​&nbsp;ᬩᬮᬶ​᭟​&nbsp;
+          </div>
         </div>
       </div>
 
