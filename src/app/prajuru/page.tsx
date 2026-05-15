@@ -119,7 +119,7 @@ export default function PrajuruPage() {
           {prajuru.map((p) => (
             <div key={p.id} className="glass-card p-6 flex flex-col items-center text-center gap-3 transition-transform hover:-translate-y-1">
               {/* Avatar */}
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-amber-200 border-2 border-amber-300 flex items-center justify-center flex-shrink-0">
+              <div className="w-16 h-16 rounded-full bg-linear-to-br from-amber-100 to-amber-200 border-2 border-amber-300 flex items-center justify-center shrink-0">
                 <span className="font-inter font-bold text-amber-700 text-lg">
                   {initial(p.name)}
                 </span>
@@ -174,14 +174,14 @@ export default function PrajuruPage() {
       </div>
 
       {/* Divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+      <div className="h-px bg-linear-to-r from-transparent via-slate-200 to-transparent" />
 
       {/* ── Priests section ── */}
       <div>
         <div className="flex justify-between items-end mb-6">
           <div>
             <div className="font-balinese text-amber-500 text-sm opacity-55 mb-1">ᬧᬫᬗ᭄ᬓᬸ ᬮᬦ᭄ ᬧᬾᬤᬦ᭄ᬤ</div>
-            <h2 className="font-inter font-bold text-slate-800 text-xl">Pemangku & Pedanda</h2>
+            <h2 className="font-inter font-bold text-slate-800 text-xl">Pemangku Banjar</h2>
           </div>
           {isAdmin && (
             <button
@@ -218,7 +218,7 @@ export default function PrajuruPage() {
                   )}
                 </div>
                 {isAdmin && (
-                  <div className="flex gap-2 flex-shrink-0">
+                  <div className="flex gap-2 shrink-0">
                     <button
                       onClick={() => setRModal(p)}
                       className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
@@ -239,7 +239,7 @@ export default function PrajuruPage() {
 
           {priests.length === 0 && (
             <p className="font-garamond text-slate-400 col-span-2 text-center py-10 text-xl">
-              Belum ada data pemangku atau pedanda.
+              Belum ada data pemangku.
             </p>
           )}
         </div>

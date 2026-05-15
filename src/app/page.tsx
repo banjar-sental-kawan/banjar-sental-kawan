@@ -149,7 +149,7 @@ export default function HomePage() {
           ᬩᬜ᭄ᬚᬃ ᬆᬤᬢ᭄ ᬲᭂᬦ᭄ᬢᬮ᭄ ᬓᬯᬦ᭄
         </div>
         <p className="font-garamond text-slate-600 text-lg max-w-xl mx-auto leading-relaxed">
-          Organisasi komunitas tradisional yang berperan menjaga keharmonisan,
+          Organisasi adat di dalam naungan Desa Adat Ped yang berperan menjaga keharmonisan,
           melaksanakan upacara adat Hindu, dan memberikan dukungan kepada seluruh
           krama Banjar Adat Sental Kawan.
         </p>
