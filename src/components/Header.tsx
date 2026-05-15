@@ -34,7 +34,7 @@ export default function Header() {
           <div className="flex items-center justify-between py-3 border-b border-slate-100">
             <div>
               <div className="font-balinese text-amber-500 text-xs opacity-60 mb-0.5">
-                ᬒᬁ ᬲ᭄ᬯᬲ᭄ᬢᬶᬲ᭄ᬢᬸ
+                ᬒᬁ​&nbsp;ᬲ᭄ᬯᬲ᭄ᬢ᭄ᬬᬲ᭄ᬢᬸ​᭟​&nbsp;
               </div>
               <h1 className="font-inter font-bold text-slate-800 text-[15px] leading-tight">
                 Banjar Adat Sental Kawan
