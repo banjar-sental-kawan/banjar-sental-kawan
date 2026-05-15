@@ -126,36 +126,66 @@ export default function HomePage() {
     <div className="space-y-8 fade-up">
 
       {/* ── Hero card ── */}
-      <div className="glass-card p-8 sm:p-12 text-center relative overflow-hidden">
-        <div className="absolute -top-10 -right-10 w-48 h-48 bg-green-50 rounded-full blur-2xl opacity-60" />
+      <div className="glass-card text-center relative overflow-hidden">
 
-        {/* Logo — only renders if file exists in /public */}
-        <div className="flex justify-center mb-6">
+        {/* ── Gate + Logo section ── */}
+        <div className="relative flex items-end justify-center" style={{ minHeight: 220 }}>
+
+          {/* Subtle background glow behind gates */}
+          <div className="absolute inset-0 bg-linear-to-b from-green-50/60 via-amber-50/30 to-transparent pointer-events-none" />
+
+          {/* Left gate */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logo.png"
-            alt="Logo Banjar Adat Sental Kawan"
-            width={110}
-            height={110}
-            className="object-contain drop-shadow-md"
+            src="/bali-gate-left.png"
+            alt="Candi bentar khas Bali di sisi kiri"
+            aria-hidden="true"
+            className="absolute left-0 bottom-0 w-auto select-none pointer-events-none"
+            style={{ height: 210, objectFit: 'contain', objectPosition: 'bottom left' }}
             onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
           />
+
+          {/* Right gate */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/bali-gate-right.png"
+            alt="Candi bentar khas Bali di sisi kanan"
+            aria-hidden="true"
+            className="absolute right-0 bottom-0 w-auto select-none pointer-events-none"
+            style={{ height: 210, objectFit: 'contain', objectPosition: 'bottom right' }}
+            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+          />
+
+          {/* Logo centered between the gates */}
+          <div className="relative z-10 flex flex-col items-center pb-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt="Logo Banjar Adat Sental Kawan"
+              className="object-contain drop-shadow-lg"
+              style={{ width: 100, height: 100 }}
+              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+            />
+          </div>
         </div>
 
-        <h1 className="font-inter font-bold text-slate-800 text-3xl sm:text-4xl mb-2">
-          Banjar Adat Sental Kawan
-        </h1>
-        <div className="font-balinese text-amber-500 text-sm mb-5" style={{ opacity: 0.85 }}>
-          ᬩᬜ᭄ᬚᬃ ᬆᬤᬢ᭄ ᬲᭂᬦ᭄ᬢᬮ᭄ ᬓᬯᬦ᭄
+        {/* ── Text content ── */}
+        <div className="px-6 sm:px-12 pb-10 pt-5">
+          <h1 className="font-inter font-bold text-slate-800 text-3xl sm:text-4xl mb-2">
+            Banjar Adat Sental Kawan
+          </h1>
+          <div className="font-balinese text-amber-500 text-sm mb-5" style={{ opacity: 0.85 }}>
+            ᬩᬜ᭄ᬚᬃ ᬆᬤᬢ᭄ ᬲᭂᬦ᭄ᬢᬮ᭄ ᬓᬯᬦ᭄
+          </div>
+          <p className="font-garamond text-slate-600 text-lg max-w-xl mx-auto leading-relaxed">
+            Organisasi adat di dalam naungan Desa Adat Ped yang berperan menjaga
+            keharmonisan, melaksanakan upacara adat Hindu, dan memberikan dukungan
+            kepada seluruh krama Banjar Adat Sental Kawan.
+          </p>
+          <p className="font-garamond text-slate-400 text-sm mt-4">
+            Desa Adat Ped · Kecamatan Nusa Penida · Kabupaten Klungkung · Provinsi Bali
+          </p>
         </div>
-        <p className="font-garamond text-slate-600 text-lg max-w-xl mx-auto leading-relaxed">
-          Organisasi adat di dalam naungan Desa Adat Ped yang berperan menjaga keharmonisan,
-          melaksanakan upacara adat Hindu, dan memberikan dukungan kepada seluruh
-          krama Banjar Adat Sental Kawan.
-        </p>
-        <p className="font-garamond text-slate-400 text-sm mt-4">
-          Desa Adat Ped · Kecamatan Nusa Penida · Kabupaten Klungkung · Provinsi Bali
-        </p>
       </div>
 
       {/* ── Stat cards ── */}

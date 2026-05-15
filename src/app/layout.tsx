@@ -67,7 +67,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
           {/* ── Footer ── */}
           <footer className="text-center pb-8">
-            <span className="font-balinese text-slate-300 text-base">ᬒᬁ ᬰᬦ᭄ᬢᬶ ᬰᬦ᭄ᬢᬶ ᬰᬦ᭄ᬢᬶ</span>
+            <span className="font-balinese text-slate-300 text-base">ᬒᬁ ᬰᬦ᭄ᬢᬶ ᬰᬦ᭄ᬢᬶ ᬰᬦ᭄ᬢᬶ</span><br />
+            <span className="font-balinese text-slate-300 text-base">ᬓᬓᬃᬃᬬᬦᬶᬦ᭄​ ᬳᭀᬮᬶᬄ​ ᬳᬶ​ ᬕᭂᬤᬾ​ ᬲᬸᬢ​ ᬧᬶᬦᬢᬶᬄ</span>
           </footer>
 
         </AdminProvider>
