@@ -129,43 +129,47 @@ export default function HomePage() {
       <div className="glass-card text-center relative overflow-hidden">
 
         {/* ── Gate + Logo section ── */}
-        <div className="relative flex items-end justify-center" style={{ minHeight: 220 }}>
+        <div className="relative flex items-end justify-center w-full" style={{ minHeight: 220 }}>
 
-          {/* Subtle background glow behind gates */}
+          {/* Subtle background glow behind gates (Keeps full width) */}
           <div className="absolute inset-0 bg-linear-to-b from-green-50/60 via-amber-50/30 to-transparent pointer-events-none" />
 
-          {/* Left gate */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/bali-gate-left.png"
-            alt="Candi bentar khas Bali di sisi kiri"
-            aria-hidden="true"
-            className="absolute left-0 bottom-0 w-auto select-none pointer-events-none"
-            style={{ height: 210, objectFit: 'contain', objectPosition: 'bottom left' }}
-            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
-          />
-
-          {/* Right gate */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/bali-gate-right.png"
-            alt="Candi bentar khas Bali di sisi kanan"
-            aria-hidden="true"
-            className="absolute right-0 bottom-0 w-auto select-none pointer-events-none"
-            style={{ height: 210, objectFit: 'contain', objectPosition: 'bottom right' }}
-            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
-          />
-
-          {/* Logo centered between the gates */}
-          <div className="relative z-10 flex flex-col items-center pb-4">
+          {/* ── NEW WRAPPER: Constrains the gates and logo to max-w-xl ── */}
+          <div className="relative w-full max-w-xl flex items-end justify-center" style={{ minHeight: 220 }}>
+            
+            {/* Left gate */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo.png"
-              alt="Logo Banjar Adat Sental Kawan"
-              className="object-contain drop-shadow-lg"
-              style={{ width: 100, height: 100 }}
+              src="/bali-gate-left.png"
+              alt="Candi bentar khas Bali di sisi kiri"
+              aria-hidden="true"
+              className="absolute left-0 bottom-0 w-auto select-none pointer-events-none"
+              style={{ height: 210, objectFit: 'contain', objectPosition: 'bottom left' }}
               onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
             />
+
+            {/* Right gate */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/bali-gate-right.png"
+              alt="Candi bentar khas Bali di sisi kanan"
+              aria-hidden="true"
+              className="absolute right-0 bottom-0 w-auto select-none pointer-events-none"
+              style={{ height: 210, objectFit: 'contain', objectPosition: 'bottom right' }}
+              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+            />
+
+            {/* Logo centered between the gates */}
+            <div className="relative z-10 flex flex-col items-center pb-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo.png"
+                alt="Logo Banjar Adat Sental Kawan"
+                className="object-contain drop-shadow-lg"
+                style={{ width: 100, height: 100 }}
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+              />
+            </div>
           </div>
         </div>
 
