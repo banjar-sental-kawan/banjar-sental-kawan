@@ -103,7 +103,7 @@ export default function PrajuruPage() {
         <div className="flex justify-between items-end mb-6">
           <div>
             <div className="font-balinese text-amber-500 text-sm opacity-55 mb-1">ᬧ᭄ᬭᬚᬸᬭᬸ ᬩᬜ᭄ᬚᬃ ᬆᬤᬢ᭄</div>
-            <h1 className="font-inter font-bold text-slate-800 text-2xl">Prajuru Banjar</h1>
+            <h1 className="font-inter font-bold text-slate-800 text-2xl">Prajuru Banjar Adat</h1>
           </div>
           {isAdmin && (
             <button
@@ -180,7 +180,7 @@ export default function PrajuruPage() {
       <div>
         <div className="flex justify-between items-end mb-6">
           <div>
-            <div className="font-balinese text-amber-500 text-sm opacity-55 mb-1">ᬧᬫᬗ᭄ᬓᬸ ᬮᬦ᭄ ᬧᬾᬤᬦ᭄ᬤ</div>
+            <div className="font-balinese text-amber-500 text-sm opacity-55 mb-1">ᬧᭂᬫᬗ᭄ᬓᬸ​&nbsp;ᬩᬜ᭄ᬚᬃ</div>
             <h2 className="font-inter font-bold text-slate-800 text-xl">Pemangku Banjar</h2>
           </div>
           {isAdmin && (
