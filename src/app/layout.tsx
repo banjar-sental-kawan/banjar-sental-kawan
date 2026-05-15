@@ -37,21 +37,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.variable} ${notoBalinese.variable} ${cormorant.variable} antialiased`}>
         <AdminProvider>
 
-          {/* ── Rich ambient background ── */}
+          {/* ── Rich ambient background with #5ebc67 green ── */}
           <div className="fixed inset-0 -z-10" aria-hidden="true"
-            style={{ background: "linear-gradient(135deg, #fdf6e3 0%, #fef9f0 30%, #f0f4ff 65%, #f5f0ff 100%)" }}>
-            {/* Top-left warm amber glow */}
-            <div className="absolute -top-20 -left-20 w-150 h-150 rounded-full opacity-60"
-              style={{ background: "radial-gradient(circle, #fde68a 0%, #fbbf24 30%, transparent 70%)", filter: "blur(60px)" }} />
-            {/* Bottom-right cool indigo glow */}
-            <div className="absolute -bottom-20 -right-20 w-140 h-140nded-full opacity-40"
-              style={{ background: "radial-gradient(circle, #c7d2fe 0%, #818cf8 30%, transparent 70%)", filter: "blur(60px)" }} />
-            {/* Center emerald accent */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-100 h-100 rounded-full opacity-25"
-              style={{ background: "radial-gradient(circle, #6ee7b7 0%, #10b981 40%, transparent 70%)", filter: "blur(70px)" }} />
-            {/* Top-right terracotta */}
-            <div className="absolute top-10 right-10 w-[320px] h-80 rounded-full opacity-30"
-              style={{ background: "radial-gradient(circle, #fca5a5 0%, #f87171 40%, transparent 70%)", filter: "blur(55px)" }} />
+            style={{ background: "linear-gradient(135deg, #f0faf1 0%, #fefce8 35%, #f0f4ff 70%, #faf5ff 100%)" }}>
+            {/* Top-left green glow */}
+            <div className="absolute -top-24 -left-24 w-145 h-145 rounded-full opacity-55"
+              style={{ background: "radial-gradient(circle, #5ebc67 0%, #86efac 40%, transparent 70%)", filter: "blur(65px)" }} />
+            {/* Top-right amber glow */}
+            <div className="absolute -top-10 right-0 w-105 h-105 rounded-full opacity-45"
+              style={{ background: "radial-gradient(circle, #fbbf24 0%, #fde68a 45%, transparent 70%)", filter: "blur(60px)" }} />
+            {/* Bottom-right indigo glow */}
+            <div className="absolute -bottom-20 -right-20 w-130 h-130 rounded-full opacity-35"
+              style={{ background: "radial-gradient(circle, #818cf8 0%, #c7d2fe 45%, transparent 70%)", filter: "blur(65px)" }} />
+            {/* Bottom-left green-teal glow */}
+            <div className="absolute bottom-10 left-10 w-95 h-95 rounded-full opacity-30"
+              style={{ background: "radial-gradient(circle, #5ebc67 0%, #a7f3d0 50%, transparent 70%)", filter: "blur(60px)" }} />
+            {/* Center soft warm glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-90 h-90 rounded-full opacity-20"
+              style={{ background: "radial-gradient(circle, #fca5a5 0%, #fde68a 50%, transparent 70%)", filter: "blur(70px)" }} />
           </div>
 
           {/* ── Sticky header ── */}
