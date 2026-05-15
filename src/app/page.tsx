@@ -85,7 +85,7 @@ export default function HomePage() {
       label: 'Total Krama',
       value: stats.members,
       unit:  'orang',
-      bali:  'ᬓ᭄ᬭᬫ',
+      bali:  'ᬓ᭄ᬭᬫ​&nbsp;ᬩᬜ᭄ᬚᬃ​᭟​&nbsp;',
       color: 'text-amber-600 bg-amber-50',
     },
     {
@@ -93,7 +93,7 @@ export default function HomePage() {
       label: 'Kegiatan Mendatang',
       value: stats.events,
       unit:  'agenda',
-      bali:  'ᬓᬕᬶᬬᬢᬦ᭄',
+      bali:  'ᬳᬘᬭ​&nbsp;ᬮᬦ᭄​&nbsp;ᬓᬃᬃᬬ​᭟​&nbsp;',
       color: 'text-blue-600 bg-blue-50',
     },
     {
@@ -101,7 +101,7 @@ export default function HomePage() {
       label: 'Saldo Kas',
       value: fmt(stats.balance),
       unit:  '',
-      bali:  'ᬲᬮ᭄ᬤᭀ',
+      bali:  'ᬚᬶᬦᬄ​᭟​&nbsp;',
       color: stats.balance >= 0
         ? 'text-emerald-600 bg-emerald-50'
         : 'text-red-500 bg-red-50',
@@ -111,7 +111,7 @@ export default function HomePage() {
       label: 'Pengumuman',
       value: stats.announcements,
       unit:  'info',
-      bali:  'ᬧᬗᬸᬫᬸᬫᬦ᭄',
+      bali:  'ᬧᬶᬬᬸᬦᬶᬂ​᭟​&nbsp;',
       color: 'text-violet-600 bg-violet-50',
     },
   ]

@@ -89,7 +89,7 @@ export default function EventsPage() {
           <p className="font-garamond text-slate-400 text-sm mt-2">📍 {e.location}</p>
         </div>
         {isAdmin && (
-          <div className="flex gap-2 flex-shrink-0">
+          <div className="flex gap-2 shrink-0">
             <button
               onClick={() => setModal(e)}
               className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"

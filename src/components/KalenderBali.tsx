@@ -183,7 +183,7 @@ export default function KalenderBali() {
       <div className="flex items-end justify-between">
         <div>
           <div className="font-balinese text-amber-500 text-sm mb-1" style={{ opacity: 0.8 }}>
-            ᬓᬮᭂᬦ᭄ᬤᬃ ᬩᬮᬶ
+            ᬤᬶᬦ​&nbsp;ᬮᬦ᭄​&nbsp;ᬯᬭᬶᬕ
           </div>
           <h2 className="font-inter font-bold text-slate-800 text-xl">Kalender Bali</h2>
         </div>
