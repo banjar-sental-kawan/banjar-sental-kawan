@@ -64,7 +64,7 @@ export default function AnnouncementsPage() {
       {/* Page header */}
       <div className="flex justify-between items-end mb-7">
         <div>
-          <div className="font-balinese text-amber-500 text-sm opacity-55 mb-1">ᬧᬗᬸᬫᬸᬫᬦ᭄ ᬩᬜ᭄ᬚᬃ</div>
+          <div className="font-balinese text-amber-500 text-sm opacity-55 mb-1">ᬧᬶᬬᬸᬦᬶᬂ​᭟​&nbsp;</div>
           <h1 className="font-inter font-bold text-slate-800 text-2xl">Pengumuman</h1>
         </div>
         {isAdmin && (

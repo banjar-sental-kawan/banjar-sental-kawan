@@ -90,7 +90,7 @@ export default function FinancePage() {
       {/* Page header */}
       <div className="flex justify-between items-end mb-7">
         <div>
-          <div className="font-balinese text-amber-500 text-sm opacity-55 mb-1">ᬓᬾᬯᬗᬦ᭄ ᬩᬜ᭄ᬚᬃ</div>
+          <div className="font-balinese text-amber-500 text-sm opacity-55 mb-1">ᬳᬶᬦ᭄ᬤᬶᬓ᭄​&nbsp;ᬚᬶᬦᬄ​᭟​&nbsp;</div>
           <h1 className="font-inter font-bold text-slate-800 text-2xl">Keuangan Banjar</h1>
         </div>
         {isAdmin && (

@@ -119,7 +119,7 @@ export default function EventsPage() {
       {/* Page header */}
       <div className="flex justify-between items-end mb-7">
         <div>
-          <div className="font-balinese text-amber-500 text-sm opacity-55 mb-1">ᬓᬕᬶᬬᬢᬦ᭄ ᬮᬦ᭄ ᬉᬧᬘᬭ</div>
+          <div className="font-balinese text-amber-500 text-sm opacity-55 mb-1">ᬳᬘᬭ​&nbsp;ᬮᬦ᭄​&nbsp;ᬉᬧᬘᬭ​᭟​&nbsp;</div>
           <h1 className="font-inter font-bold text-slate-800 text-2xl">Kegiatan & Upacara</h1>
         </div>
         {isAdmin && (
