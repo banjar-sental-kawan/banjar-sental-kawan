@@ -11,6 +11,7 @@ import { useAdmin } from '@/context/AdminContext'
 import EditModal, { type FieldConfig } from '@/components/EditModal'
 import type { KramaMember } from '@/lib/types'
 
+/* ── 127 krama from official PDF ── */
 const SEED_MEMBERS = [
   "Gede Soma","Gede Tawan","Gede Misna","Gede Karya","Gede Suastana",
   "Gede Kuasa","Gede Sulasta","Gede Jahendra","Gede Sunarya","Gede Sudarma",
@@ -40,9 +41,10 @@ const SEED_MEMBERS = [
   "Putu Nusada","Ketut Suartika",
 ]
 
+/* ── Field config — kk renamed to nik ── */
 const FIELDS: FieldConfig[] = [
-  { key: 'name',    label: 'Nama Lengkap', type: 'text',   placeholder: 'Nama krama' },
-  { key: 'kk',      label: 'Nomor KK',    type: 'text',   placeholder: 'KK-001' },
+  { key: 'name',    label: 'Nama Lengkap',  type: 'text',   placeholder: 'Nama krama' },
+  { key: 'kk',     label: 'NIK',            type: 'text',   placeholder: 'NIK-001' },
   {
     key: 'status', label: 'Status Krama', type: 'select',
     options: [
@@ -68,13 +70,13 @@ type ToastType = 'success' | 'error'
 interface Toast { type: ToastType; message: string }
 
 export default function MembersPage() {
-  const { isAdmin }               = useAdmin()
-  const [members,  setMembers]    = useState<KramaMember[]>([])
-  const [loading,  setLoading]    = useState(true)
-  const [seeding,  setSeeding]    = useState(false)
-  const [search,   setSearch]     = useState('')
-  const [modal,    setModal]      = useState<Partial<KramaMember> | null>(null)
-  const [toast,    setToast]      = useState<Toast | null>(null)
+  const { isAdmin }            = useAdmin()
+  const [members,  setMembers] = useState<KramaMember[]>([])
+  const [loading,  setLoading] = useState(true)
+  const [seeding,  setSeeding] = useState(false)
+  const [search,   setSearch]  = useState('')
+  const [modal,    setModal]   = useState<Partial<KramaMember> | null>(null)
+  const [toast,    setToast]   = useState<Toast | null>(null)
 
   const showToast = (type: ToastType, message: string) => {
     setToast({ type, message })
@@ -91,45 +93,45 @@ export default function MembersPage() {
 
   useEffect(() => { load() }, [])
 
+  /* ── Seed 127 krama ── */
   const seedMembers = async () => {
-    if (!confirm(
-      `Import ${SEED_MEMBERS.length} data krama ke Supabase?\nPastikan tabel masih kosong.`
-    )) return
-
+    if (!confirm(`Import ${SEED_MEMBERS.length} data krama ke Supabase?\nPastikan tabel masih kosong.`)) return
     setSeeding(true)
-
     const rows = SEED_MEMBERS.map((name, i) => ({
       name,
       kk:      `KK-${String(i + 1).padStart(3, '0')}`,
       status:  'Krama Ngarep',
       address: 'Br. Sental Kawan',
     }))
-
-    // Insert in batches of 50 to stay within Supabase limits
     const BATCH = 50
     for (let i = 0; i < rows.length; i += BATCH) {
       const { error } = await supabase.from('members').insert(rows.slice(i, i + BATCH))
       if (error) {
         setSeeding(false)
-        showToast('error',
-          `Import gagal pada baris ${i + 1}–${i + BATCH}: ${error.message}. ` +
-          `Periksa RLS policy di Supabase dashboard.`
-        )
+        showToast('error', `Import gagal: ${error.message}. Periksa RLS policy di Supabase.`)
         return
       }
     }
-
     await load()
     setSeeding(false)
-    showToast('success', `Berhasil mengimpor ${SEED_MEMBERS.length} krama ke Supabase! 🙏`)
+    showToast('success', `Berhasil mengimpor ${SEED_MEMBERS.length} krama! 🙏`)
   }
 
+  /* ── FIX 1: Strip `id` from update payload so Supabase accepts it ── */
   const save = async (form: Record<string, unknown>) => {
-    const { error } = form.id
-      ? await supabase.from('members').update(form).eq('id', form.id)
-      : await supabase.from('members').insert([form])
-    if (error) showToast('error', `Gagal menyimpan: ${error.message}`)
-    else { setModal(null); showToast('success', 'Data berhasil disimpan.'); load() }
+    const { id, ...fields } = form
+
+    const { error } = id
+      ? await supabase.from('members').update(fields).eq('id', id)
+      : await supabase.from('members').insert([fields])
+
+    if (error) {
+      showToast('error', `Gagal menyimpan: ${error.message}`)
+    } else {
+      setModal(null)
+      showToast('success', 'Data berhasil disimpan.')
+      load()
+    }
   }
 
   const remove = async (id: number) => {
@@ -141,7 +143,7 @@ export default function MembersPage() {
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase()
-    return members.filter((m) =>
+    return members.filter(m =>
       [m.name, m.kk, m.status, m.address].join(' ').toLowerCase().includes(q)
     )
   }, [members, search])
@@ -224,8 +226,8 @@ export default function MembersPage() {
         <input
           type="text"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Cari nama, No. KK, atau status krama…"
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Cari nama, NIK, atau status krama…"
           className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 bg-white font-inter text-sm text-slate-800 shadow-sm transition-all"
         />
       </div>
@@ -236,7 +238,8 @@ export default function MembersPage() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-slate-100">
-                {['No.', 'Nama Lengkap', 'No. KK', 'Status', 'Alamat', ''].map((h, i) => (
+                {/* FIX 3: "No. KK" → "NIK" */}
+                {['No.', 'Nama Lengkap', 'NIK', 'Status', 'Alamat', ''].map((h, i) => (
                   <th key={i} className="px-4 py-3 text-left font-inter text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap">
                     {h}
                   </th>
@@ -258,10 +261,18 @@ export default function MembersPage() {
                   <td className="px-4 py-3">
                     {isAdmin && (
                       <div className="flex gap-2">
-                        <button onClick={() => setModal(m)} className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors" title="Edit">
+                        <button
+                          onClick={() => setModal(m)}
+                          className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
+                          title="Edit"
+                        >
                           <PencilSimple size={13} />
                         </button>
-                        <button onClick={() => remove(m.id)} className="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-400 transition-colors" title="Hapus">
+                        <button
+                          onClick={() => remove(m.id)}
+                          className="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-400 transition-colors"
+                          title="Hapus"
+                        >
                           <Trash size={13} />
                         </button>
                       </div>
@@ -279,6 +290,7 @@ export default function MembersPage() {
         )}
       </div>
 
+      {/* ── FIX 2: Modal — scroll happens inside overlay, not behind it ── */}
       {modal && (
         <EditModal
           title={modal.id ? 'Edit Anggota Krama' : 'Tambah Anggota Krama'}

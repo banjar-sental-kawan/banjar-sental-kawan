@@ -40,9 +40,11 @@ export default function AnnouncementsPage() {
 
   useEffect(() => { load() }, [])
 
+  /* ── FIX: destructure id out so it is never sent in the update payload ── */
   const save = async (form: Record<string, unknown>) => {
-    if (form.id) await supabase.from('announcements').update(form).eq('id', form.id)
-    else         await supabase.from('announcements').insert([form])
+    const { id, ...fields } = form
+    if (id) await supabase.from('announcements').update(fields).eq('id', id)
+    else    await supabase.from('announcements').insert([fields])
     setModal(null)
     load()
   }
@@ -104,7 +106,12 @@ export default function AnnouncementsPage() {
                 <h3 className="font-inter font-semibold text-slate-800 text-base mb-2 leading-snug">
                   {a.title}
                 </h3>
-                <p className="font-garamond text-slate-600 leading-relaxed text-base">
+
+                {/* FIX: overflowWrap breaks long URLs at container boundary */}
+                <p
+                  className="font-garamond text-slate-600 leading-relaxed text-base"
+                  style={{ overflowWrap: 'anywhere', wordBreak: 'break-word' }}
+                >
                   {a.content}
                 </p>
               </div>
