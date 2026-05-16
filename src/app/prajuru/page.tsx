@@ -7,22 +7,21 @@ import { useAdmin } from '@/context/AdminContext'
 import EditModal, { type FieldConfig } from '@/components/EditModal'
 import type { Prajuru, Priest } from '@/lib/types'
 
-/* ── Field configs ── */
 const PRAJURU_FIELDS: FieldConfig[] = [
   {
     key: 'role', label: 'Jabatan', type: 'select',
     options: [
-      { value: 'Kelian Banjar', label: 'Kelian Banjar (Ketua)'       },
-      { value: 'Penyarikan',   label: 'Penyarikan (Sekretaris)'     },
-      { value: 'Patengen',     label: 'Patengen (Bendahara)'        },
-      { value: 'Kasinoman',    label: 'Kasinoman (Humas)'           },
-      { value: 'Lainnya',      label: 'Lainnya'                     },
+      { value: 'Kelian Banjar', label: 'Kelian Banjar (Ketua)'   },
+      { value: 'Penyarikan',   label: 'Penyarikan (Sekretaris)' },
+      { value: 'Patengen',     label: 'Patengen (Bendahara)'    },
+      { value: 'Kasinoman',    label: 'Kasinoman (Humas)'       },
+      { value: 'Lainnya',      label: 'Lainnya'                 },
     ],
   },
-  { key: 'balinese', label: 'Jabatan Aksara Bali (opsional)', type: 'text', placeholder: 'ᬓᬾᬮᬶᬬᬦ᭄…' },
-  { key: 'name',     label: 'Nama Lengkap',                   type: 'text', placeholder: 'Nama prajuru' },
-  { key: 'since',    label: 'Menjabat Sejak (Tahun)',         type: 'text', placeholder: '2023' },
-  { key: 'contact',  label: 'Nomor Kontak',                   type: 'text', placeholder: '+62 8xx-xxxx-xxxx' },
+  { key: 'balinese', label: 'Jabatan Aksara Bali (opsional)', type: 'text',     placeholder: 'ᬓᬾᬮᬶᬬᬦ᭄…' },
+  { key: 'name',     label: 'Nama Lengkap',                   type: 'text',     placeholder: 'Nama prajuru' },
+  { key: 'since',    label: 'Menjabat Sejak (Tahun)',         type: 'text',     placeholder: '2023' },
+  { key: 'contact',  label: 'Nomor Kontak',                   type: 'text',     placeholder: '+62 8xx-xxxx-xxxx' },
   { key: 'note',     label: 'Catatan',                        type: 'textarea', placeholder: 'Keterangan tambahan…' },
 ]
 
@@ -36,24 +35,24 @@ const PRIEST_FIELDS: FieldConfig[] = [
       { value: 'Lainnya',   label: 'Lainnya'   },
     ],
   },
-  { key: 'name',      label: 'Nama Lengkap', type: 'text', placeholder: 'Nama lengkap' },
+  { key: 'name',      label: 'Nama Lengkap',       type: 'text', placeholder: 'Nama lengkap' },
   { key: 'specialty', label: 'Spesialisasi / Pura', type: 'text', placeholder: 'Pura atau keahlian upacara' },
-  { key: 'contact',   label: 'Nomor Kontak', type: 'text', placeholder: '+62 8xx-xxxx-xxxx' },
+  { key: 'contact',   label: 'Nomor Kontak',        type: 'text', placeholder: '+62 8xx-xxxx-xxxx' },
 ]
 
 const EMPTY_PRAJURU: Partial<Prajuru> = { role: 'Kelian Banjar', balinese: '', name: '', since: '', contact: '', note: '' }
 const EMPTY_PRIEST:  Partial<Priest>  = { title: 'Pemangku', name: '', specialty: '', contact: '' }
 
-/* ── Prajuru avatar initial ── */
-const initial = (name: string) => name.split(' ').slice(0, 2).map((w) => w[0]).join('').toUpperCase()
+const initial = (name: string) =>
+  name.split(' ').slice(0, 2).map((w) => w[0]).join('').toUpperCase()
 
 export default function PrajuruPage() {
   const { isAdmin } = useAdmin()
-  const [prajuru,  setPrajuru]  = useState<Prajuru[]>([])
-  const [priests,  setPriests]  = useState<Priest[]>([])
-  const [loading,  setLoading]  = useState(true)
-  const [pModal,   setPModal]   = useState<Partial<Prajuru> | null>(null)
-  const [rModal,   setRModal]   = useState<Partial<Priest>  | null>(null)
+  const [prajuru, setPrajuru] = useState<Prajuru[]>([])
+  const [priests, setPriests] = useState<Priest[]>([])
+  const [loading, setLoading] = useState(true)
+  const [pModal,  setPModal]  = useState<Partial<Prajuru> | null>(null)
+  const [rModal,  setRModal]  = useState<Partial<Priest>  | null>(null)
 
   const load = async () => {
     const [{ data: p }, { data: r }] = await Promise.all([
@@ -67,26 +66,33 @@ export default function PrajuruPage() {
 
   useEffect(() => { load() }, [])
 
+  /* ── FIX: destructure id out of both save functions ── */
   const savePrajuru = async (form: Record<string, unknown>) => {
-    if (form.id) await supabase.from('prajuru').update(form).eq('id', form.id)
-    else         await supabase.from('prajuru').insert([form])
-    setPModal(null); load()
+    const { id, ...fields } = form
+    if (id) await supabase.from('prajuru').update(fields).eq('id', id)
+    else    await supabase.from('prajuru').insert([fields])
+    setPModal(null)
+    load()
   }
 
   const removePrajuru = async (id: number) => {
     if (!confirm('Hapus data prajuru ini?')) return
-    await supabase.from('prajuru').delete().eq('id', id); load()
+    await supabase.from('prajuru').delete().eq('id', id)
+    load()
   }
 
   const savePriest = async (form: Record<string, unknown>) => {
-    if (form.id) await supabase.from('priests').update(form).eq('id', form.id)
-    else         await supabase.from('priests').insert([form])
-    setRModal(null); load()
+    const { id, ...fields } = form
+    if (id) await supabase.from('priests').update(fields).eq('id', id)
+    else    await supabase.from('priests').insert([fields])
+    setRModal(null)
+    load()
   }
 
   const removePriest = async (id: number) => {
     if (!confirm('Hapus data ini?')) return
-    await supabase.from('priests').delete().eq('id', id); load()
+    await supabase.from('priests').delete().eq('id', id)
+    load()
   }
 
   if (loading) return (
@@ -118,13 +124,11 @@ export default function PrajuruPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
           {prajuru.map((p) => (
             <div key={p.id} className="glass-card p-6 flex flex-col items-center text-center gap-3 transition-transform hover:-translate-y-1">
-              {/* Avatar */}
               <div className="w-16 h-16 rounded-full bg-linear-to-br from-amber-100 to-amber-200 border-2 border-amber-300 flex items-center justify-center shrink-0">
                 <span className="font-inter font-bold text-amber-700 text-lg">
                   {initial(p.name)}
                 </span>
               </div>
-
               {p.balinese && (
                 <div className="font-balinese text-amber-500 text-xs opacity-55">{p.balinese}</div>
               )}
@@ -145,7 +149,6 @@ export default function PrajuruPage() {
                   {p.contact}
                 </a>
               )}
-
               {isAdmin && (
                 <div className="flex gap-2 mt-1">
                   <button

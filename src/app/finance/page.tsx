@@ -62,9 +62,11 @@ export default function FinancePage() {
 
   useEffect(() => { load() }, [])
 
+  /* ── FIX: destructure id out so it is never sent in the update payload ── */
   const save = async (form: Record<string, unknown>) => {
-    if (form.id) await supabase.from('finance').update(form).eq('id', form.id)
-    else         await supabase.from('finance').insert([form])
+    const { id, ...fields } = form
+    if (id) await supabase.from('finance').update(fields).eq('id', id)
+    else    await supabase.from('finance').insert([fields])
     setModal(null)
     load()
   }

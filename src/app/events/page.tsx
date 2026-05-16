@@ -54,9 +54,11 @@ export default function EventsPage() {
 
   useEffect(() => { load() }, [])
 
+  /* ── FIX: destructure id out so it is never sent in the update payload ── */
   const save = async (form: Record<string, unknown>) => {
-    if (form.id) await supabase.from('events').update(form).eq('id', form.id)
-    else         await supabase.from('events').insert([form])
+    const { id, ...fields } = form
+    if (id) await supabase.from('events').update(fields).eq('id', id)
+    else    await supabase.from('events').insert([fields])
     setModal(null)
     load()
   }
