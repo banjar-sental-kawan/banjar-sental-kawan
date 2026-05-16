@@ -36,23 +36,33 @@ export default function EditModal({
 
   return (
     /*
-     * FIX 2 — Long scroll modal
-     * The overlay is `fixed inset-0` so it covers the viewport only, NOT the
-     * full document height. `overflow-y-auto` on the overlay means the modal
-     * itself scrolls inside the fixed viewport window, not behind the page.
+     * KEY FIX — The overlay MUST be `fixed` (not absolute/relative).
+     *
+     * `fixed inset-0`  → always covers the visible viewport, regardless
+     *                    of how far down the page is scrolled. Clicking
+     *                    Edit on row #120 shows the modal in the centre
+     *                    of the screen, not 3000px above.
+     *
+     * `overflow-y-auto` → if the form itself is taller than the viewport
+     *                    (e.g. many fields), the user can scroll inside
+     *                    the overlay — the page behind stays still.
+     *
+     * `flex min-h-full items-center justify-center` on the inner wrapper
+     *                    → vertically + horizontally centres the card
+     *                    within the fixed viewport window.
      */
     <div
       className="fixed inset-0 z-100 overflow-y-auto"
-      style={{ background: 'rgba(15,23,42,0.45)', backdropFilter: 'blur(4px)' }}
+      style={{ background: 'rgba(15, 23, 42, 0.45)', backdropFilter: 'blur(4px)' }}
       onClick={onClose}
     >
-      {/* Centering wrapper — padding keeps modal away from screen edges */}
       <div className="flex min-h-full items-center justify-center p-4 sm:p-6">
         <div
           className="glass-card w-full max-w-lg p-7 fade-up"
           onClick={e => e.stopPropagation()}
         >
-          {/* Modal header */}
+
+          {/* ── Modal header ── */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="font-inter font-bold text-slate-800 text-base">{title}</h2>
             <button
@@ -63,7 +73,7 @@ export default function EditModal({
             </button>
           </div>
 
-          {/* Fields */}
+          {/* ── Fields ── */}
           <div className="space-y-4">
             {fields.map(f => (
               <div key={f.key}>
@@ -114,7 +124,7 @@ export default function EditModal({
             ))}
           </div>
 
-          {/* Actions */}
+          {/* ── Actions ── */}
           <div className="flex gap-3 mt-7">
             <button
               onClick={handleSave}
@@ -131,6 +141,7 @@ export default function EditModal({
               Batal
             </button>
           </div>
+
         </div>
       </div>
     </div>
