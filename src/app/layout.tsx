@@ -58,7 +58,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
 
           {/* ── Sticky header ── */}
-          <Header />
+          <div className="sticky top-0 z-50">
+            <Header />
+          </div>
 
           {/* ── Page content ── */}
           <main className="max-w-5xl mx-auto px-5 py-8 pb-24">
