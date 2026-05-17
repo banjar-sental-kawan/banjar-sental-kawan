@@ -11,7 +11,6 @@ import { useAdmin } from '@/context/AdminContext'
 import EditModal, { type FieldConfig } from '@/components/EditModal'
 import type { KramaMember } from '@/lib/types'
 
-/* ── 127 krama from official PDF ── */
 const SEED_MEMBERS = [
   "Gede Soma","Gede Tawan","Gede Misna","Gede Karya","Gede Suastana",
   "Gede Kuasa","Gede Sulasta","Gede Jahendra","Gede Sunarya","Gede Sudarma",
@@ -41,10 +40,9 @@ const SEED_MEMBERS = [
   "Putu Nusada","Ketut Suartika",
 ]
 
-/* ── Field config — kk renamed to nik ── */
 const FIELDS: FieldConfig[] = [
-  { key: 'name',    label: 'Nama Lengkap',  type: 'text',   placeholder: 'Nama krama' },
-  { key: 'kk',     label: 'NIK',            type: 'text',   placeholder: 'NIK-001' },
+  { key: 'name',   label: 'Nama Lengkap', type: 'text',   placeholder: 'Nama krama' },
+  { key: 'kk',     label: 'NIK',          type: 'text',   placeholder: 'NIK-001' },
   {
     key: 'status', label: 'Status Krama', type: 'select',
     options: [
@@ -64,6 +62,13 @@ const STATUS_BADGE: Record<string, string> = {
   'Krama Ngarep': 'badge-seni',
   'Krama Tamiu':  'badge-rapat',
   'Tamiu':        'badge-rapat',
+}
+
+/* Shorter display label for mobile — avoids wrapping */
+const STATUS_SHORT: Record<string, string> = {
+  'Krama Ngarep': 'Ngarep',
+  'Krama Tamiu':  'Tamiu',
+  'Tamiu':        'Tamiu',
 }
 
 type ToastType = 'success' | 'error'
@@ -93,7 +98,6 @@ export default function MembersPage() {
 
   useEffect(() => { load() }, [])
 
-  /* ── Seed 127 krama ── */
   const seedMembers = async () => {
     if (!confirm(`Import ${SEED_MEMBERS.length} data krama ke Supabase?\nPastikan tabel masih kosong.`)) return
     setSeeding(true)
@@ -117,14 +121,11 @@ export default function MembersPage() {
     showToast('success', `Berhasil mengimpor ${SEED_MEMBERS.length} krama! 🙏`)
   }
 
-  /* ── FIX 1: Strip `id` from update payload so Supabase accepts it ── */
   const save = async (form: Record<string, unknown>) => {
     const { id, ...fields } = form
-
     const { error } = id
       ? await supabase.from('members').update(fields).eq('id', id)
       : await supabase.from('members').insert([fields])
-
     if (error) {
       showToast('error', `Gagal menyimpan: ${error.message}`)
     } else {
@@ -238,29 +239,80 @@ export default function MembersPage() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-slate-100">
-                {/* FIX 3: "No. KK" → "NIK" */}
-                {['No.', 'Nama Lengkap', 'NIK', 'Status', 'Alamat', ''].map((h, i) => (
-                  <th key={i} className="px-4 py-3 text-left font-inter text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap">
-                    {h}
-                  </th>
-                ))}
+                {/*
+                  MOBILE LAYOUT:
+                  - No.          → always visible, narrow
+                  - Nama Lengkap → always visible, takes up remaining space
+                  - NIK          → hidden on mobile (sm:table-cell)
+                  - Status       → always visible, whitespace-nowrap badge
+                  - Alamat       → hidden on mobile (sm:table-cell)
+                  - Actions      → always visible
+                */}
+                <th className="px-3 py-3 text-left font-inter text-xs font-semibold text-slate-400 uppercase tracking-wider w-8">
+                  No.
+                </th>
+                <th className="px-3 py-3 text-left font-inter text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                  Nama Lengkap
+                </th>
+                <th className="hidden sm:table-cell px-3 py-3 text-left font-inter text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap">
+                  NIK
+                </th>
+                <th className="px-3 py-3 text-left font-inter text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap">
+                  Status
+                </th>
+                <th className="hidden md:table-cell px-3 py-3 text-left font-inter text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                  Alamat
+                </th>
+                <th className="px-3 py-3 w-16" />
               </tr>
             </thead>
             <tbody>
               {filtered.map((m, i) => (
                 <tr key={m.id} className="row-hover border-b border-slate-50">
-                  <td className="px-4 py-3 font-inter text-slate-300 text-sm">{i + 1}</td>
-                  <td className="px-4 py-3 font-inter font-semibold text-slate-800 text-sm">{m.name}</td>
-                  <td className="px-4 py-3 font-garamond text-slate-500 text-sm">{m.kk}</td>
-                  <td className="px-4 py-3">
-                    <span className={`text-xs font-inter font-semibold px-2.5 py-1 rounded-full ${STATUS_BADGE[m.status] ?? 'badge-rapat'}`}>
+                  {/* No. */}
+                  <td className="px-3 py-3 font-inter text-slate-300 text-sm">
+                    {i + 1}
+                  </td>
+
+                  {/* Nama — on mobile also shows NIK + Alamat as sub-text */}
+                  <td className="px-3 py-3">
+                    <div className="font-inter font-semibold text-slate-800 text-sm">
+                      {m.name}
+                    </div>
+                    {/* Sub-text visible only on mobile */}
+                    <div className="sm:hidden font-garamond text-slate-400 text-xs mt-0.5">
+                      {m.kk}
+                    </div>
+                    <div className="md:hidden sm:hidden font-garamond text-slate-400 text-xs">
+                      {m.address}
+                    </div>
+                  </td>
+
+                  {/* NIK — hidden on mobile */}
+                  <td className="hidden sm:table-cell px-3 py-3 font-garamond text-slate-500 text-sm">
+                    {m.kk}
+                  </td>
+
+                  {/* Status — whitespace-nowrap prevents wrapping */}
+                  <td className="px-3 py-3">
+                    {/* Full label on sm+, short label on mobile */}
+                    <span className={`hidden sm:inline-block text-xs font-inter font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ${STATUS_BADGE[m.status] ?? 'badge-rapat'}`}>
                       {m.status}
                     </span>
+                    <span className={`sm:hidden text-xs font-inter font-semibold px-2 py-1 rounded-full whitespace-nowrap ${STATUS_BADGE[m.status] ?? 'badge-rapat'}`}>
+                      {STATUS_SHORT[m.status] ?? m.status}
+                    </span>
                   </td>
-                  <td className="px-4 py-3 font-garamond text-slate-500 text-sm">{m.address}</td>
-                  <td className="px-4 py-3">
+
+                  {/* Alamat — hidden on mobile */}
+                  <td className="hidden md:table-cell px-3 py-3 font-garamond text-slate-500 text-sm">
+                    {m.address}
+                  </td>
+
+                  {/* Actions */}
+                  <td className="px-3 py-3">
                     {isAdmin && (
-                      <div className="flex gap-2">
+                      <div className="flex gap-1.5 justify-end">
                         <button
                           onClick={() => setModal(m)}
                           className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
@@ -290,7 +342,6 @@ export default function MembersPage() {
         )}
       </div>
 
-      {/* ── FIX 2: Modal — scroll happens inside overlay, not behind it ── */}
       {modal && (
         <EditModal
           title={modal.id ? 'Edit Anggota Krama' : 'Tambah Anggota Krama'}

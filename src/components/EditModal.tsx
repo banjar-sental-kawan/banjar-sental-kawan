@@ -25,12 +25,7 @@ export default function EditModal({
   const [form,   setForm]   = useState<Record<string, unknown>>(initialData)
   const [saving, setSaving] = useState(false)
 
-  /*
-   * FIX — Lock body scroll while modal is open.
-   * On mobile, without this the page behind the modal remains scrollable,
-   * which means users scroll the page instead of seeing the modal.
-   * The cleanup function restores scroll when the modal closes.
-   */
+  /* Lock body scroll while modal is open — prevents page scrolling on mobile */
   useEffect(() => {
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
@@ -48,27 +43,32 @@ export default function EditModal({
 
   return (
     /*
-     * `fixed inset-0`      — covers the viewport, not the document
-     * `overflow-y-auto`    — lets the form scroll inside the overlay if tall
-     * body scroll is locked above, so touch-scroll stays inside the modal
+     * MOBILE FIX:
+     * The overlay uses `flex items-center justify-center` directly — the modal
+     * card is ALWAYS centred in the visible viewport regardless of scroll position.
+     *
+     * The card itself uses `max-h-[90vh] overflow-y-auto` so tall forms scroll
+     * inside the card, never inside the page. `min-h-full` + `overflow-y-auto`
+     * on the overlay (previous approach) breaks on mobile Safari because
+     * it miscalculates vh when the address bar is visible.
      */
     <div
-      className="fixed inset-0 z-100 overflow-y-auto"
-      style={{ background: 'rgba(15, 23, 42, 0.45)', backdropFilter: 'blur(4px)' }}
+      className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6"
+      style={{ background: 'rgba(15, 23, 42, 0.50)', backdropFilter: 'blur(4px)' }}
       onClick={onClose}
     >
-      <div className="flex min-h-full items-center justify-center p-4 sm:p-6">
-        <div
-          className="glass-card w-full max-w-lg p-7 fade-up"
-          onClick={e => e.stopPropagation()}
-        >
+      <div
+        className="glass-card w-full max-w-lg max-h-[90vh] overflow-y-auto fade-up"
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="p-7">
 
           {/* ── Modal header ── */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="font-inter font-bold text-slate-800 text-base">{title}</h2>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 transition-colors"
+              className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 transition-colors shrink-0"
             >
               <X size={18} />
             </button>
