@@ -5,6 +5,7 @@ import { Plus, PencilSimple, Trash, Warning } from '@phosphor-icons/react'
 import { supabase } from '@/lib/supabase'
 import { useAdmin } from '@/context/AdminContext'
 import EditModal, { type FieldConfig } from '@/components/EditModal'
+import AutoLink from '@/components/AutoLink'
 import type { Announcement } from '@/lib/types'
 
 const fmtDate = (d: string) =>
@@ -40,7 +41,6 @@ export default function AnnouncementsPage() {
 
   useEffect(() => { load() }, [])
 
-  /* ── FIX: destructure id out so it is never sent in the update payload ── */
   const save = async (form: Record<string, unknown>) => {
     const { id, ...fields } = form
     if (id) await supabase.from('announcements').update(fields).eq('id', id)
@@ -107,12 +107,9 @@ export default function AnnouncementsPage() {
                   {a.title}
                 </h3>
 
-                {/* FIX: overflowWrap breaks long URLs at container boundary */}
-                <p
-                  className="font-garamond text-slate-600 leading-relaxed text-base"
-                  style={{ overflowWrap: 'anywhere', wordBreak: 'break-word' }}
-                >
-                  {a.content}
+                {/* AutoLink converts plain URLs into clickable anchor tags */}
+                <p className="font-garamond text-slate-600 leading-relaxed text-base">
+                  <AutoLink text={a.content} />
                 </p>
               </div>
 

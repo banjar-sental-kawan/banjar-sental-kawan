@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, FloppyDisk } from '@phosphor-icons/react'
 
 export interface FieldConfig {
@@ -25,6 +25,18 @@ export default function EditModal({
   const [form,   setForm]   = useState<Record<string, unknown>>(initialData)
   const [saving, setSaving] = useState(false)
 
+  /*
+   * FIX — Lock body scroll while modal is open.
+   * On mobile, without this the page behind the modal remains scrollable,
+   * which means users scroll the page instead of seeing the modal.
+   * The cleanup function restores scroll when the modal closes.
+   */
+  useEffect(() => {
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prev }
+  }, [])
+
   const set = (key: string, value: unknown) =>
     setForm(f => ({ ...f, [key]: value }))
 
@@ -36,20 +48,9 @@ export default function EditModal({
 
   return (
     /*
-     * KEY FIX — The overlay MUST be `fixed` (not absolute/relative).
-     *
-     * `fixed inset-0`  → always covers the visible viewport, regardless
-     *                    of how far down the page is scrolled. Clicking
-     *                    Edit on row #120 shows the modal in the centre
-     *                    of the screen, not 3000px above.
-     *
-     * `overflow-y-auto` → if the form itself is taller than the viewport
-     *                    (e.g. many fields), the user can scroll inside
-     *                    the overlay — the page behind stays still.
-     *
-     * `flex min-h-full items-center justify-center` on the inner wrapper
-     *                    → vertically + horizontally centres the card
-     *                    within the fixed viewport window.
+     * `fixed inset-0`      — covers the viewport, not the document
+     * `overflow-y-auto`    — lets the form scroll inside the overlay if tall
+     * body scroll is locked above, so touch-scroll stays inside the modal
      */
     <div
       className="fixed inset-0 z-100 overflow-y-auto"

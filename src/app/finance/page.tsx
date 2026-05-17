@@ -45,11 +45,14 @@ const EMPTY: Partial<FinanceRecord> = {
   date: '', description: '', category: 'Iuran', type: 'pemasukan', amount: 0,
 }
 
+type Tab = 'semua' | 'pemasukan' | 'pengeluaran'
+
 export default function FinancePage() {
   const { isAdmin } = useAdmin()
   const [records, setRecords] = useState<FinanceRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [modal,   setModal]   = useState<Partial<FinanceRecord> | null>(null)
+  const [tab,     setTab]     = useState<Tab>('semua')
 
   const load = async () => {
     const { data } = await supabase
@@ -62,7 +65,6 @@ export default function FinancePage() {
 
   useEffect(() => { load() }, [])
 
-  /* ── FIX: destructure id out so it is never sent in the update payload ── */
   const save = async (form: Record<string, unknown>) => {
     const { id, ...fields } = form
     if (id) await supabase.from('finance').update(fields).eq('id', id)
@@ -77,9 +79,42 @@ export default function FinancePage() {
     load()
   }
 
-  const totalIn  = records.filter((r) => r.type === 'pemasukan').reduce((s, r) => s + r.amount, 0)
-  const totalOut = records.filter((r) => r.type === 'pengeluaran').reduce((s, r) => s + r.amount, 0)
+  const totalIn  = records.filter(r => r.type === 'pemasukan').reduce((s, r) => s + r.amount, 0)
+  const totalOut = records.filter(r => r.type === 'pengeluaran').reduce((s, r) => s + r.amount, 0)
   const balance  = totalIn - totalOut
+
+  /* Records filtered by active tab */
+  const displayed =
+    tab === 'semua'        ? records :
+    tab === 'pemasukan'    ? records.filter(r => r.type === 'pemasukan') :
+                             records.filter(r => r.type === 'pengeluaran')
+
+  /* Tab-specific total */
+  const tabTotal =
+    tab === 'semua'        ? null :
+    tab === 'pemasukan'    ? totalIn :
+                             totalOut
+
+  const TABS: { key: Tab; label: string; color: string; active: string }[] = [
+    {
+      key:    'semua',
+      label:  'Semua',
+      color:  'text-slate-500 border-transparent hover:text-slate-700 hover:border-slate-300',
+      active: 'text-amber-700 border-amber-500 bg-amber-50',
+    },
+    {
+      key:    'pemasukan',
+      label:  '▲ Pemasukan',
+      color:  'text-slate-500 border-transparent hover:text-emerald-700 hover:border-emerald-300',
+      active: 'text-emerald-700 border-emerald-500 bg-emerald-50',
+    },
+    {
+      key:    'pengeluaran',
+      label:  '▼ Pengeluaran',
+      color:  'text-slate-500 border-transparent hover:text-red-600 hover:border-red-300',
+      active: 'text-red-600 border-red-500 bg-red-50',
+    },
+  ]
 
   if (loading) return (
     <div className="flex items-center justify-center py-40">
@@ -140,8 +175,25 @@ export default function FinancePage() {
         </div>
       </div>
 
-      {/* Ledger table */}
+      {/* ── Tabs ── */}
       <div className="glass-card overflow-hidden">
+
+        {/* Tab bar */}
+        <div className="flex border-b border-slate-100">
+          {TABS.map(t => (
+            <button
+              key={t.key}
+              onClick={() => setTab(t.key)}
+              className={`font-inter font-semibold text-sm px-5 py-3.5 border-b-2 transition-all whitespace-nowrap ${
+                tab === t.key ? t.active : t.color
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Table */}
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
@@ -157,7 +209,7 @@ export default function FinancePage() {
               </tr>
             </thead>
             <tbody>
-              {records.map((r) => (
+              {displayed.map((r) => (
                 <tr key={r.id} className="row-hover border-b border-slate-50">
                   <td className="px-4 py-3 font-garamond text-slate-400 text-sm whitespace-nowrap">
                     {fmtDate(r.date)}
@@ -189,11 +241,46 @@ export default function FinancePage() {
                 </tr>
               ))}
             </tbody>
+
+            {/* ── Total row at the bottom of each tab ── */}
+            {tabTotal !== null && displayed.length > 0 && (
+              <tfoot>
+                <tr className="border-t-2 border-slate-200 bg-slate-50/60">
+                  <td colSpan={4} className="px-4 py-3 font-inter font-semibold text-slate-600 text-sm text-right">
+                    Total {tab === 'pemasukan' ? 'Pemasukan' : 'Pengeluaran'}
+                  </td>
+                  <td className={`px-4 py-3 font-inter font-bold text-base text-right whitespace-nowrap ${
+                    tab === 'pemasukan' ? 'text-emerald-600' : 'text-red-500'
+                  }`}>
+                    {fmt(tabTotal)}
+                  </td>
+                  <td />
+                </tr>
+              </tfoot>
+            )}
+
+            {/* Semua tab: show balance total row */}
+            {tab === 'semua' && records.length > 0 && (
+              <tfoot>
+                <tr className="border-t-2 border-slate-200 bg-slate-50/60">
+                  <td colSpan={4} className="px-4 py-3 font-inter font-semibold text-slate-600 text-sm text-right">
+                    Saldo Kas
+                  </td>
+                  <td className={`px-4 py-3 font-inter font-bold text-base text-right whitespace-nowrap ${
+                    balance >= 0 ? 'text-amber-600' : 'text-red-500'
+                  }`}>
+                    {fmt(balance)}
+                  </td>
+                  <td />
+                </tr>
+              </tfoot>
+            )}
           </table>
         </div>
-        {records.length === 0 && (
-          <p className="font-garamond text-slate-400 text-center py-20 text-xl">
-            Belum ada catatan keuangan.
+
+        {displayed.length === 0 && (
+          <p className="font-garamond text-slate-400 text-center py-16 text-xl">
+            Belum ada catatan {tab === 'semua' ? 'keuangan' : tab}.
           </p>
         )}
       </div>
