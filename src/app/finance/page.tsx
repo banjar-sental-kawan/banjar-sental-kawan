@@ -83,17 +83,14 @@ export default function FinancePage() {
   const totalOut = records.filter(r => r.type === 'pengeluaran').reduce((s, r) => s + r.amount, 0)
   const balance  = totalIn - totalOut
 
-  /* Records filtered by active tab */
   const displayed =
-    tab === 'semua'        ? records :
-    tab === 'pemasukan'    ? records.filter(r => r.type === 'pemasukan') :
-                             records.filter(r => r.type === 'pengeluaran')
+    tab === 'semua'     ? records :
+    tab === 'pemasukan' ? records.filter(r => r.type === 'pemasukan') :
+                          records.filter(r => r.type === 'pengeluaran')
 
-  /* Tab-specific total */
   const tabTotal =
-    tab === 'semua'        ? null :
-    tab === 'pemasukan'    ? totalIn :
-                             totalOut
+    tab === 'semua'     ? null :
+    tab === 'pemasukan' ? totalIn : totalOut
 
   const TABS: { key: Tab; label: string; color: string; active: string }[] = [
     {
@@ -175,16 +172,16 @@ export default function FinancePage() {
         </div>
       </div>
 
-      {/* ── Tabs ── */}
+      {/* ── Tabs + Table ── */}
       <div className="glass-card overflow-hidden">
 
         {/* Tab bar */}
-        <div className="flex border-b border-slate-100">
+        <div className="flex border-b border-slate-100 overflow-x-auto">
           {TABS.map(t => (
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
-              className={`font-inter font-semibold text-sm px-5 py-3.5 border-b-2 transition-all whitespace-nowrap ${
+              className={`font-inter font-semibold text-sm px-4 sm:px-5 py-3.5 border-b-2 transition-all whitespace-nowrap ${
                 tab === t.key ? t.active : t.color
               }`}
             >
@@ -198,37 +195,82 @@ export default function FinancePage() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-slate-100">
-                {['Tanggal', 'Keterangan', 'Kategori', 'Jenis', 'Jumlah', ''].map((h, i) => (
-                  <th
-                    key={i}
-                    className="px-4 py-3 text-left font-inter text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap"
-                  >
-                    {h}
-                  </th>
-                ))}
+                {/*
+                  MOBILE RESPONSIVE COLUMNS:
+                  - Tanggal    → always visible
+                  - Keterangan → always visible (Kategori shown as sub-text on mobile)
+                  - Kategori   → hidden on mobile (sm:table-cell)
+                  - Jenis      → always visible, whitespace-nowrap badge
+                  - Jumlah     → always visible
+                  - Delete     → always visible (admin only)
+                */}
+                <th className="px-3 py-3 text-left font-inter text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap">
+                  Tanggal
+                </th>
+                <th className="px-3 py-3 text-left font-inter text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                  Keterangan
+                </th>
+                <th className="hidden sm:table-cell px-3 py-3 text-left font-inter text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap">
+                  Kategori
+                </th>
+                <th className="px-3 py-3 text-left font-inter text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap">
+                  Jenis
+                </th>
+                <th className="px-3 py-3 text-right font-inter text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap">
+                  Jumlah
+                </th>
+                <th className="px-3 py-3 w-10" />
               </tr>
             </thead>
             <tbody>
               {displayed.map((r) => (
                 <tr key={r.id} className="row-hover border-b border-slate-50">
-                  <td className="px-4 py-3 font-garamond text-slate-400 text-sm whitespace-nowrap">
+
+                  {/* Tanggal */}
+                  <td className="px-3 py-3 font-garamond text-slate-400 text-sm whitespace-nowrap align-top">
                     {fmtDate(r.date)}
                   </td>
-                  <td className="px-4 py-3 font-garamond text-slate-700">{r.description}</td>
-                  <td className="px-4 py-3 font-garamond text-slate-400 text-sm">{r.category}</td>
-                  <td className="px-4 py-3">
-                    <span className={`text-xs font-inter font-semibold px-2.5 py-1 rounded-full ${
+
+                  {/* Keterangan — Kategori shown as sub-text on mobile */}
+                  <td className="px-3 py-3 align-top">
+                    <div className="font-garamond text-slate-700 text-sm">
+                      {r.description}
+                    </div>
+                    {/* Kategori sub-text, only on mobile */}
+                    <div className="sm:hidden font-garamond text-slate-400 text-xs mt-0.5">
+                      {r.category}
+                    </div>
+                  </td>
+
+                  {/* Kategori — hidden on mobile */}
+                  <td className="hidden sm:table-cell px-3 py-3 font-garamond text-slate-400 text-sm align-top">
+                    {r.category}
+                  </td>
+
+                  {/* Jenis badge — whitespace-nowrap prevents wrap */}
+                  <td className="px-3 py-3 align-top">
+                    <span className={`inline-block text-xs font-inter font-semibold px-2 py-1 rounded-full whitespace-nowrap ${
                       r.type === 'pemasukan' ? 'badge-seni' : 'badge-ngaben'
                     }`}>
-                      {r.type === 'pemasukan' ? '▲ Masuk' : '▼ Keluar'}
+                      {/* Short labels on mobile, full on sm+ */}
+                      <span className="sm:hidden">
+                        {r.type === 'pemasukan' ? '▲' : '▼'}
+                      </span>
+                      <span className="hidden sm:inline">
+                        {r.type === 'pemasukan' ? '▲ Masuk' : '▼ Keluar'}
+                      </span>
                     </span>
                   </td>
-                  <td className={`px-4 py-3 font-inter font-semibold text-sm text-right whitespace-nowrap ${
+
+                  {/* Jumlah */}
+                  <td className={`px-3 py-3 font-inter font-semibold text-sm text-right whitespace-nowrap align-top ${
                     r.type === 'pemasukan' ? 'text-emerald-600' : 'text-red-500'
                   }`}>
                     {r.type === 'pengeluaran' && '− '}{fmt(r.amount)}
                   </td>
-                  <td className="px-4 py-3 text-center">
+
+                  {/* Delete */}
+                  <td className="px-3 py-3 text-center align-top">
                     {isAdmin && (
                       <button
                         onClick={() => remove(r.id)}
@@ -242,14 +284,18 @@ export default function FinancePage() {
               ))}
             </tbody>
 
-            {/* ── Total row at the bottom of each tab ── */}
+            {/* Total row — Pemasukan / Pengeluaran tab */}
             {tabTotal !== null && displayed.length > 0 && (
               <tfoot>
                 <tr className="border-t-2 border-slate-200 bg-slate-50/60">
-                  <td colSpan={4} className="px-4 py-3 font-inter font-semibold text-slate-600 text-sm text-right">
-                    Total {tab === 'pemasukan' ? 'Pemasukan' : 'Pengeluaran'}
+                  <td colSpan={2} className="px-3 py-3 font-inter font-semibold text-slate-600 text-sm text-right">
+                    <span className="hidden sm:inline">Total {tab === 'pemasukan' ? 'Pemasukan' : 'Pengeluaran'}</span>
+                    <span className="sm:hidden">Total</span>
                   </td>
-                  <td className={`px-4 py-3 font-inter font-bold text-base text-right whitespace-nowrap ${
+                  {/* Skip Kategori column on desktop */}
+                  <td className="hidden sm:table-cell" />
+                  <td />
+                  <td className={`px-3 py-3 font-inter font-bold text-base text-right whitespace-nowrap ${
                     tab === 'pemasukan' ? 'text-emerald-600' : 'text-red-500'
                   }`}>
                     {fmt(tabTotal)}
@@ -259,14 +305,16 @@ export default function FinancePage() {
               </tfoot>
             )}
 
-            {/* Semua tab: show balance total row */}
+            {/* Total row — Semua tab (Saldo Kas) */}
             {tab === 'semua' && records.length > 0 && (
               <tfoot>
                 <tr className="border-t-2 border-slate-200 bg-slate-50/60">
-                  <td colSpan={4} className="px-4 py-3 font-inter font-semibold text-slate-600 text-sm text-right">
+                  <td colSpan={2} className="px-3 py-3 font-inter font-semibold text-slate-600 text-sm text-right">
                     Saldo Kas
                   </td>
-                  <td className={`px-4 py-3 font-inter font-bold text-base text-right whitespace-nowrap ${
+                  <td className="hidden sm:table-cell" />
+                  <td />
+                  <td className={`px-3 py-3 font-inter font-bold text-base text-right whitespace-nowrap ${
                     balance >= 0 ? 'text-amber-600' : 'text-red-500'
                   }`}>
                     {fmt(balance)}
