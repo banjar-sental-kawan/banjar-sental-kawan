@@ -5,6 +5,7 @@ import { Plus, PencilSimple, Trash } from '@phosphor-icons/react'
 import { supabase } from '@/lib/supabase'
 import { useAdmin } from '@/context/AdminContext'
 import EditModal, { type FieldConfig } from '@/components/EditModal'
+import AutoLink from '@/components/AutoLink'
 import type { BanjarEvent } from '@/lib/types'
 
 const fmtDate = (d: string) =>
@@ -87,7 +88,7 @@ export default function EventsPage() {
             <div className="font-balinese text-amber-500 text-xs opacity-55 mb-1">{e.balinese}</div>
           )}
           <h3 className="font-inter font-semibold text-slate-800 mb-2 leading-snug">{e.title}</h3>
-          <p className="font-garamond text-slate-500 leading-relaxed">{e.description}</p>
+          <p className="font-garamond text-slate-500 leading-relaxed"><AutoLink text={e.description}/></p>
           <p className="font-garamond text-slate-400 text-sm mt-2">📍 {e.location}</p>
         </div>
         {isAdmin && (
