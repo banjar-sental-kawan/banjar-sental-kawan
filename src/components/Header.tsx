@@ -27,7 +27,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="glass-header sticky top-0 z-50 px-6 py-4 flex items-center justify-between mb-4">
+      <header className="glass-header sticky top-0 z-50>
         <div className="max-w-5xl mx-auto px-5">
 
           {/* ── Top bar ── */}
