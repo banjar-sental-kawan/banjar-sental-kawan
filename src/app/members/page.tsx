@@ -157,11 +157,12 @@ export default function MembersPage() {
 
   if (loading) return (
     <div className="flex items-center justify-center py-40">
-      <span className="font-balinese text-5xl text-amber-400 animate-pulse">ᬒᬁ</span>
+      <span className="font-balinese text-5xl text-amber-400 animate-pulse">ᬒᬁ​&nbsp;ᬅᬯᬶᬖ᭄ᬦᬫᬲ᭄ᬢᬸᬦᬫᭀᬲᬶᬤ᭄ᬟᬫ᭄​᭟​&nbsp;</span>
     </div>
   )
 
   return (
+    <>
     <div className="fade-up">
 
       {/* ── Toast ── */}
@@ -341,7 +342,7 @@ export default function MembersPage() {
           </p>
         )}
       </div>
-
+</div>
       {modal && (
         <EditModal
           title={modal.id ? 'Edit Anggota Krama' : 'Tambah Anggota Krama'}
@@ -351,6 +352,6 @@ export default function MembersPage() {
           onClose={() => setModal(null)}
         />
       )}
-    </div>
+      </>
   )
 }
