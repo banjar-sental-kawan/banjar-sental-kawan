@@ -42,7 +42,7 @@ const SEED_MEMBERS = [
 
 const FIELDS: FieldConfig[] = [
   { key: 'name',   label: 'Nama Lengkap', type: 'text',   placeholder: 'Nama krama' },
-  { key: 'kk',     label: 'NIK',          type: 'text',   placeholder: 'NIK-001' },
+  { key: 'kk',     label: 'NIK',          type: 'text',   placeholder: '510501…' },
   {
     key: 'status', label: 'Status Krama', type: 'select',
     options: [
@@ -51,7 +51,7 @@ const FIELDS: FieldConfig[] = [
       { value: 'Tamiu',        label: 'Tamiu'         },
     ],
   },
-  { key: 'address', label: 'Alamat', type: 'text', placeholder: 'Br. Sental Kawan No. …' },
+  { key: 'address', label: 'Alamat', type: 'text', placeholder: 'Br. Sental Kawan' },
 ]
 
 const EMPTY: Partial<KramaMember> = {
