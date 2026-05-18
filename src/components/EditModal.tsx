@@ -42,42 +42,17 @@ export default function EditModal({
   }
 
   return (
-    /*
-     * ROOT CAUSE FIX:
-     *
-     * The previous version had `backdropFilter: blur(4px)` on this overlay div
-     * AND `backdrop-filter: blur(16px)` on the .glass-card child.
-     *
-     * When a parent element has backdrop-filter, the browser creates a new
-     * stacking context. Inside that context, the child's backdrop-filter blurs
-     * the already-processed parent layer — on Chrome/Safari this makes the
-     * .glass-card render fully transparent (invisible), which is exactly what
-     * the screenshots show: blurred page, no visible modal card.
-     *
-     * FIX: Split into two separate layers —
-     *   1. A plain dark semi-transparent overlay (no backdrop-filter) — this is
-     *      what the user clicks to close and what dims the page.
-     *   2. A blur-only layer (pointer-events:none) behind the card — purely visual.
-     *   3. The .glass-card itself keeps its own backdrop-filter untouched.
-     *
-     * This way no parent has backdrop-filter, so the glass-card renders correctly
-     * on all browsers including mobile Safari.
-     */
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
-      style={{ background: 'rgba(15, 23, 42, 0.55)' }}
+      className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6"
+      style={{ background: 'rgba(15, 23, 42, 0.65)' }} // Slightly darkened to compensate for the removed blur
       onClick={onClose}
     >
-      {/* Separate blur layer — does NOT wrap the card, so no stacking context conflict */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }}
-      />
-
-      {/* Modal card — glass-card backdrop-filter now works correctly */}
+      {/* We removed the absolute inset-0 blur layer entirely. 
+        Now, the glass-card is the ONLY element applying a backdrop-filter, 
+        so WebKit will render it perfectly without crashing.
+      */}
       <div
         className="glass-card relative w-full max-w-lg max-h-[88vh] overflow-y-auto fade-up"
-        style={{ zIndex: 1 }}
         onClick={e => e.stopPropagation()}
       >
         <div className="p-6 sm:p-7">
