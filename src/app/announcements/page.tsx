@@ -62,6 +62,7 @@ export default function AnnouncementsPage() {
   )
 
   return (
+    <> {/* <--- ADD THIS EMPTY FRAGMENT HERE */}
     <div className="fade-up">
       {/* Page header */}
       <div className="flex justify-between items-end mb-7">
@@ -139,7 +140,7 @@ export default function AnnouncementsPage() {
           Belum ada pengumuman.
         </p>
       )}
-
+</div> {/* <--- CLOSE THE FADE-UP DIV HERE */}
       {modal && (
         <EditModal
           title={modal.id ? 'Edit Pengumuman' : 'Tambah Pengumuman'}
@@ -149,6 +150,6 @@ export default function AnnouncementsPage() {
           onClose={() => setModal(null)}
         />
       )}
-    </div>
+    </> /* <--- CLOSE THE FRAGMENT HERE */
   )
 }

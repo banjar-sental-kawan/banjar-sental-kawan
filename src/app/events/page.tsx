@@ -118,6 +118,7 @@ export default function EventsPage() {
   )
 
   return (
+    <>
     <div className="fade-up">
       {/* Page header */}
       <div className="flex justify-between items-end mb-7">
@@ -160,7 +161,7 @@ export default function EventsPage() {
           Belum ada kegiatan terdaftar.
         </p>
       )}
-
+</div>
       {modal && (
         <EditModal
           title={modal.id ? 'Edit Kegiatan' : 'Tambah Kegiatan'}
@@ -170,6 +171,6 @@ export default function EventsPage() {
           onClose={() => setModal(null)}
         />
       )}
-    </div>
+    </>
   )
 }

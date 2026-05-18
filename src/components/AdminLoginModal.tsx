@@ -29,7 +29,7 @@ export default function AdminLoginModal({ onClose }: { onClose: () => void }) {
         {/* Header */}
         <div className="flex justify-between items-start mb-7">
           <div>
-            <div className="font-balinese text-amber-500 text-3xl mb-1">ᬒᬁ​&nbsp;ᬅᬯᬶᬖ᭄ᬦᬫᬲ᭄ᬢᬸᬦᬫᭀᬲᬶᬤ᭄ᬟᬫ᭄​᭟​&nbsp;</div>
+            <div className="font-balinese text-amber-500 text-3xl mb-1">ᬒᬁ</div>
             <h2 className="font-inter font-bold text-slate-800 text-lg leading-tight">
               Login Admin
             </h2>

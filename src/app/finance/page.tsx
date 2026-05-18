@@ -120,6 +120,7 @@ export default function FinancePage() {
   )
 
   return (
+    <> {/* <--- ADD THIS EMPTY FRAGMENT HERE */}
     <div className="fade-up">
       {/* Page header */}
       <div className="flex justify-between items-end mb-7">
@@ -332,7 +333,7 @@ export default function FinancePage() {
           </p>
         )}
       </div>
-
+</div> {/* <--- CLOSE THE FADE-UP DIV HERE */}
       {modal && (
         <EditModal
           title="Catat Transaksi"
@@ -342,6 +343,6 @@ export default function FinancePage() {
           onClose={() => setModal(null)}
         />
       )}
-    </div>
+    </> /* <--- CLOSE THE FRAGMENT HERE */
   )
 }
