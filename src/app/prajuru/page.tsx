@@ -102,6 +102,7 @@ export default function PrajuruPage() {
   )
 
   return (
+    <> {/* <---ADD THIS EMPTY FRAGMENT HERE */}
     <div className="fade-up space-y-10">
 
       {/* ── Prajuru section ── */}
@@ -247,7 +248,7 @@ export default function PrajuruPage() {
           )}
         </div>
       </div>
-
+</div> {/* <--- CLOSE THE FADE-UP DIV HERE */}
       {/* Modals */}
       {pModal && (
         <EditModal
@@ -267,6 +268,6 @@ export default function PrajuruPage() {
           onClose={() => setRModal(null)}
         />
       )}
-    </div>
+    </> /* <--- CLOSE THE FRAGMENT HERE */
   )
 }
