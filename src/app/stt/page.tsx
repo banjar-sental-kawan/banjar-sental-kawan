@@ -46,7 +46,7 @@ const fmtDateShort = (d: string) =>
 /* ═══════════════════════════════════════════════════════════
    STT ADMIN PASSWORD (separate from main banjar admin)
 ═══════════════════════════════════════════════════════════ */
-const STT_PASSWORD = 'sttlw_2026'
+const STT_PASSWORD = 'lontar2024'
 
 /* ═══════════════════════════════════════════════════════════
    STT LOGIN MODAL
@@ -61,43 +61,58 @@ function SttLoginModal({ onLogin, onClose }: { onLogin: () => void; onClose: () 
   }
 
   return (
-    <div
-      className="fixed inset-0 z-99"
-      style={{ background: 'rgba(15,23,42,0.45)' }}
-      onClick={onClose}
-    >
+    <>
+      {/* Layer 1 — plain dark overlay, no backdrop-filter (prevents glass-card invisibility) */}
       <div
-        className="fixed z-100 glass-card p-7 w-full max-w-sm fade-up"
-        style={{ top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }}
-        onClick={e => e.stopPropagation()}
+        className="fixed inset-0 z-99"
+        style={{ background: 'rgba(15,23,42,0.50)' }}
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      {/* Layer 2 — modal card, centred in viewport via translate, z above overlay */}
+      <div
+        className="fixed z-100 fade-up"
+        style={{
+          top:       '50%',
+          left:      '50%',
+          transform: 'translate(-50%, -50%)',
+          width:     'calc(100% - 2rem)',
+          maxWidth:  '22rem',
+        }}
       >
-        <div className="flex justify-between items-center mb-5">
-          <div>
-            <h2 className="font-inter font-bold text-slate-800 text-base">Login Admin STT</h2>
-            <p className="font-garamond text-slate-400 text-sm mt-0.5">Sekaa Truna Truni Lontar Wilis</p>
+        <div
+          className="glass-card p-6 w-full"
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="flex justify-between items-center mb-5">
+            <div>
+              <h2 className="font-inter font-bold text-slate-800 text-base">Login Admin STT</h2>
+              <p className="font-garamond text-slate-400 text-sm mt-0.5">Sekaa Truna Truni Lontar Wilis</p>
+            </div>
+            <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 transition-colors">
+              <X size={16} />
+            </button>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400">
-            <X size={16} />
+          <input
+            type="password"
+            autoFocus
+            placeholder="Kata sandi STT"
+            value={pw}
+            onChange={e => { setPw(e.target.value); setErr('') }}
+            onKeyDown={e => e.key === 'Enter' && submit()}
+            className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-800 font-inter text-sm mb-2 transition-all"
+          />
+          {err && <p className="font-inter text-xs text-red-500 mb-2">{err}</p>}
+          <button
+            onClick={submit}
+            className="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-inter font-semibold text-sm py-2.5 rounded-lg transition-all mt-2"
+          >
+            <LockKey size={14} /> Masuk
           </button>
         </div>
-        <input
-          type="password"
-          autoFocus
-          placeholder="Kata sandi STT"
-          value={pw}
-          onChange={e => { setPw(e.target.value); setErr('') }}
-          onKeyDown={e => e.key === 'Enter' && submit()}
-          className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-800 font-inter text-sm mb-2 transition-all"
-        />
-        {err && <p className="font-inter text-xs text-red-500 mb-3">{err}</p>}
-        <button
-          onClick={submit}
-          className="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-inter font-semibold text-sm py-2.5 rounded-lg transition-all mt-2"
-        >
-          <LockKey size={14} /> Masuk
-        </button>
       </div>
-    </div>
+    </>
   )
 }
 
@@ -333,26 +348,34 @@ export default function SttPage() {
     <div className="fade-up space-y-6">
 
       {/* ── Page header ── */}
-      <div className="flex justify-between items-end">
-        <div>
+      <div className="flex justify-between items-start gap-3">
+        <div className="min-w-0">
           <div className="font-balinese text-amber-500 text-sm opacity-60 mb-1">ᬲᬾᬓᬵ ᬢ᭄ᬭᬸᬦ ᬢ᭄ᬭᬸᬦᬶ</div>
-          <h1 className="font-inter font-bold text-slate-800 text-2xl">STT Lontar Wilis</h1>
-          <p className="font-garamond text-slate-500 text-base mt-0.5">
+          <h1 className="font-inter font-bold text-slate-800 text-2xl leading-tight">STT Lontar Wilis</h1>
+          <p className="font-garamond text-slate-500 text-sm mt-0.5">
             Sekaa Truna Truni · Banjar Adat Sental Kawan
           </p>
         </div>
+
+        {/* Admin button — compact on mobile, label on sm+ */}
         <button
           onClick={() => isAdmin ? handleLogout() : setShowLogin(true)}
-          className={`flex items-center gap-1.5 font-inter font-semibold text-sm px-3 py-1.5 rounded-lg transition-all ${
+          className={`flex items-center gap-1.5 font-inter font-semibold text-sm px-3 py-1.5 rounded-lg transition-all shrink-0 whitespace-nowrap ${
             isAdmin
               ? 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               : 'bg-emerald-500 text-white hover:bg-emerald-600 shadow-sm'
           }`}
         >
-          {isAdmin
-            ? <><LockKeyOpen size={14} /> Keluar</>
-            : <><LockKey     size={14} /> Admin STT</>
-          }
+          {isAdmin ? (
+            <><LockKeyOpen size={14} /> <span>Keluar</span></>
+          ) : (
+            <>
+              <LockKey size={14} />
+              {/* Full label on sm+, short on mobile */}
+              <span className="hidden sm:inline">Admin STT</span>
+              <span className="sm:hidden">STT</span>
+            </>
+          )}
         </button>
       </div>
 
