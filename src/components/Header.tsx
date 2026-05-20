@@ -5,36 +5,37 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import {
   House, CalendarDots, Megaphone, CurrencyCircleDollar,
-  UsersThree, UserList, LockKey, LockKeyOpen, List, X,
+  UsersThree, UserList, LockKey, LockKeyOpen, List, X, Leaf,
 } from '@phosphor-icons/react'
 import { useAdmin } from '@/context/AdminContext'
 import AdminLoginModal from './AdminLoginModal'
 
 const NAV = [
-  { href: '/',              label: 'Beranda',    icon: House             },
-  { href: '/events',        label: 'Kegiatan',   icon: CalendarDots      },
-  { href: '/announcements', label: 'Pengumuman', icon: Megaphone         },
+  { href: '/',              label: 'Beranda',    icon: House              },
+  { href: '/events',        label: 'Kegiatan',   icon: CalendarDots       },
+  { href: '/announcements', label: 'Pengumuman', icon: Megaphone          },
   { href: '/finance',       label: 'Keuangan',   icon: CurrencyCircleDollar },
-  { href: '/prajuru',       label: 'Prajuru',    icon: UsersThree        },
-  { href: '/members',       label: 'Anggota',    icon: UserList          },
+  { href: '/prajuru',       label: 'Prajuru',    icon: UsersThree         },
+  { href: '/members',       label: 'Anggota',    icon: UserList           },
+  { href: '/stt',           label: 'STT Lontar Wilis',        icon: Leaf               },
 ]
 
 export default function Header() {
   const pathname              = usePathname()
   const { isAdmin, logout }   = useAdmin()
-  const [showLogin, setShowLogin] = useState(false)
+  const [showLogin, setShowLogin]   = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
     <>
-      <header className="glass-header sticky top-0 z-50">
+      <header className="glass-header">
         <div className="max-w-5xl mx-auto px-5">
 
           {/* ── Top bar ── */}
           <div className="flex items-center justify-between py-3 border-b border-slate-100">
             <div>
               <div className="font-balinese text-amber-500 text-xs opacity-60 mb-0.5">
-                ᬒᬁ​&nbsp;ᬲ᭄ᬯᬲ᭄ᬢ᭄ᬬᬲ᭄ᬢᬸ​᭟​&nbsp;
+                ᬒᬁ ᬲ᭄ᬯᬲ᭄ᬢᬶᬲ᭄ᬢᬸ
               </div>
               <h1 className="font-inter font-bold text-slate-800 text-[15px] leading-tight">
                 Banjar Adat Sental Kawan
@@ -50,8 +51,6 @@ export default function Header() {
                   ● Mode Admin
                 </span>
               )}
-
-              {/* Admin button */}
               <button
                 onClick={() => (isAdmin ? logout() : setShowLogin(true))}
                 className={`flex items-center gap-1.5 font-inter font-semibold text-sm px-3 py-1.5 rounded-lg transition-all ${
@@ -66,7 +65,6 @@ export default function Header() {
                 }
               </button>
 
-              {/* Hamburger (mobile only) */}
               <button
                 className="sm:hidden p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors"
                 onClick={() => setMobileOpen(!mobileOpen)}
@@ -98,7 +96,7 @@ export default function Header() {
             })}
           </nav>
 
-          {/* ── Mobile nav (dropdown) ── */}
+          {/* ── Mobile nav ── */}
           {mobileOpen && (
             <nav className="sm:hidden flex flex-col gap-0.5 pb-3 pt-1.5">
               {NAV.map(({ href, label, icon: Icon }) => {
