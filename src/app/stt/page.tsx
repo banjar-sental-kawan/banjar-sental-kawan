@@ -61,58 +61,46 @@ function SttLoginModal({ onLogin, onClose }: { onLogin: () => void; onClose: () 
   }
 
   return (
-    <>
-      {/* Layer 1 — plain dark overlay, no backdrop-filter (prevents glass-card invisibility) */}
+    <div
+      className="fixed inset-0 z-100 flex items-center justify-center p-4"
+      style={{ background: 'rgba(15, 23, 42, 0.65)' }}
+      onClick={onClose}
+      aria-hidden="true"
+    >
       <div
-        className="fixed inset-0 z-99"
-        style={{ background: 'rgba(15,23,42,0.50)' }}
-        onClick={onClose}
-        aria-hidden="true"
-      />
-
-      {/* Layer 2 — modal card, centred in viewport via translate, z above overlay */}
-      <div
-        className="fixed z-100 fade-up"
-        style={{
-          top:       '50%',
-          left:      '50%',
-          transform: 'translate(-50%, -50%)',
-          width:     'calc(100% - 2rem)',
-          maxWidth:  '22rem',
-        }}
+        className="glass-card relative p-6 w-full max-w-88 fade-up"
+        onClick={e => e.stopPropagation()}
       >
-        <div
-          className="glass-card p-6 w-full"
-          onClick={e => e.stopPropagation()}
-        >
-          <div className="flex justify-between items-center mb-5">
-            <div>
-              <h2 className="font-inter font-bold text-slate-800 text-base">Login Admin STT</h2>
-              <p className="font-garamond text-slate-400 text-sm mt-0.5">Sekaa Truna Truni Lontar Wilis</p>
-            </div>
-            <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 transition-colors">
-              <X size={16} />
-            </button>
+        <div className="flex justify-between items-center mb-5">
+          <div>
+            <h2 className="font-inter font-bold text-slate-800 text-base">Login Admin STT</h2>
+            <p className="font-garamond text-slate-400 text-sm mt-0.5">Sekaa Truna Truni Lontar Wilis</p>
           </div>
-          <input
-            type="password"
-            autoFocus
-            placeholder="Kata sandi STT"
-            value={pw}
-            onChange={e => { setPw(e.target.value); setErr('') }}
-            onKeyDown={e => e.key === 'Enter' && submit()}
-            className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-800 font-inter text-sm mb-2 transition-all"
-          />
-          {err && <p className="font-inter text-xs text-red-500 mb-2">{err}</p>}
-          <button
-            onClick={submit}
-            className="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-inter font-semibold text-sm py-2.5 rounded-lg transition-all mt-2"
-          >
-            <LockKey size={14} /> Masuk
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 transition-colors">
+            <X size={16} />
           </button>
         </div>
+        
+        <input
+          type="password"
+          autoFocus
+          placeholder="Kata sandi STT"
+          value={pw}
+          onChange={e => { setPw(e.target.value); setErr('') }}
+          onKeyDown={e => e.key === 'Enter' && submit()}
+          className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-800 font-inter text-sm mb-2 transition-all"
+        />
+        
+        {err && <p className="font-inter text-xs text-red-500 mb-2">{err}</p>}
+        
+        <button
+          onClick={submit}
+          className="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-inter font-semibold text-sm py-2.5 rounded-lg transition-all mt-2 shadow-sm"
+        >
+          <LockKey size={14} /> Masuk
+        </button>
       </div>
-    </>
+    </div>
   )
 }
 
